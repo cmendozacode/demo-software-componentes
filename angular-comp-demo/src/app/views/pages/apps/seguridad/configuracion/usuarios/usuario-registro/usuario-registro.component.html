@@ -1,0 +1,414 @@
+<div class="kt-portlet" [ngClass]="{ 'kt-portlet--body-progress kt-portlet--body-progress-overlay' : viewLoading }">
+	<kt-portlet-header [title]="getTitle()" [class]="'kt-portlet__head--lg'">
+		<ng-container ktPortletTools>
+			<a [routerLink]="['../usuario']" class="btn btn-secondary kt-margin-r-10" mat-raised-button matTooltip="Regresar a la lista">
+				<i class="la la-arrow-left"></i>
+				<span class="kt-hidden-mobile">Cancelar</span>
+			</a>
+			<button *ngIf="!this.registro.disabled" type="button" mat-raised-button color="primary" (click)="guardarRegistro()" [disabled]="viewLoading || registroForm.invalid || !currentUsuario" matTooltip="Guardar cambios">
+				Grabar
+			</button>
+		</ng-container>
+	</kt-portlet-header>
+	<kt-portlet-body>
+		<form class="kt-form" [formGroup]="registroForm">
+			<div class="kt-portlet__body">
+				<div class="kt-portlet__body-progress">
+					<mat-spinner [diameter]="20"></mat-spinner>
+				</div>
+				<kt-alert *ngIf="hasFormErrors" type="{{typeAlert}}" [duration]="30000" [showCloseButton]="true" (close)="onAlertClose($event)">
+					{{messageAlert}}
+				</kt-alert>
+
+				<mat-tab-group (selectedIndexChange)="selectedIndexChange($event)">
+					<mat-tab label="Datos Generales">
+						<div class="demo-tab-content">
+							<div class="form-group kt-form__group row">
+								<div class="col-lg-3 kt-margin-bottom-20-mobile">
+									<mat-form-field class="mat-form-field-fluid">
+										<mat-select placeholder="Empresa" formControlName="empresaID">
+											<mat-option *ngFor="let item of listadoCboEmpresas" [value]="item.empresaID">{{item.empresaNombre}}</mat-option>
+										</mat-select>
+										<mat-error *ngFor="let val of validations.empresaID"><strong>{{val.message}}</strong></mat-error>
+									</mat-form-field>
+								</div>
+								<div class="col-lg-3 kt-margin-bottom-20-mobile">
+									<mat-form-field class="mat-form-field-fluid">
+										<mat-select placeholder="Tipo Usuario" formControlName="usuarioTipoID">
+											<mat-option *ngFor="let item of listadoCboTiposUsuario" [value]="item.usuarioTipoID">{{item.usuarioTipoNombre}}</mat-option>
+										</mat-select>
+										<mat-error *ngFor="let val of validations.usuarioTipoID"><strong>{{val.message}}</strong></mat-error>
+									</mat-form-field>
+								</div>
+								<div class="col-lg-2 kt-margin-bottom-20-mobile">
+									<mat-form-field class="mat-form-field-fluid">
+										<input matInput [placeholder]="this.registroForm.get('usuarioTipoID').value==593?'RUC':(this.registroForm.get('usuarioTipoID').value==573||this.registroForm.get('usuarioTipoID').value==587 ||this.registroForm.get('usuarioTipoID').value==592?'LEGAJO':'DNI')" formControlName="usuarioDNI" [maxLength]="this.registroForm.get('usuarioTipoID').value==593?11:(this.registroForm.get('usuarioTipoID').value==573||this.registroForm.get('usuarioTipoID').value==587 || this.registroForm.get('usuarioTipoID').value==592?10:8)" (keydown.tab)="buscarTrabajador()" (keydown.enter)="buscarTrabajador()" digitOnlyNumber />
+										<mat-error *ngFor="let val of validations.usuarioDNI"><strong>{{val.message}}</strong></mat-error>
+									</mat-form-field>
+								</div>
+								<div class="col-lg-4 kt-margin-bottom-20-mobile">
+									<mat-form-field class="mat-form-field-fluid">
+										<input matInput placeholder="Nombre Completo" [value]="currentTrabajador.trabajadorNombreCompleto" readonly="true" />
+									</mat-form-field>
+								</div>
+							</div>
+							<div class="form-group kt-form__group row">
+								<div class="col-lg-4 kt-margin-bottom-20-mobile">
+									<mat-form-field class="mat-form-field-fluid">
+										<input matInput type="email" placeholder="Correo" formControlName="usuarioCorreo" maxlength="100" />
+									</mat-form-field>
+								</div>
+								<div class="col-lg-2 kt-margin-bottom-20-mobile">
+									<mat-form-field class="mat-form-field-fluid">
+										<input matInput placeholder="Teléfono" formControlName="usuarioTelefono" maxlength="12" digitOnlyNumber />
+										<mat-error *ngFor="let val of validations.usuarioTelefono"><strong>{{val.message}}</strong></mat-error>
+									</mat-form-field>
+								</div>
+								<div class="col-lg-2 kt-margin-bottom-20-mobile padTop10">
+									<mat-checkbox [color]="'primary'" (change)="checkedUsuarioWeb($event)" formControlName="usuarioWeb">Web</mat-checkbox>
+								</div>
+								<div class="col-lg-2 kt-margin-bottom-20-mobile padTop10">
+									<mat-checkbox [color]="'primary'" (change)="checkedUsuarioMovil($event)" formControlName="usuarioMovil">Movil</mat-checkbox>
+								</div>
+								<div class="col-lg-2 kt-margin-bottom-20-mobile padTop10">
+									<mat-checkbox [color]="'primary'" formControlName="usuarioStatus">Activo</mat-checkbox>
+								</div>
+							</div>
+							<label for="">Seleccionar contexto</label>
+							<br>
+							<div class="mat-table__wrapper">
+								<mat-table class="lmat-elevation-z8" [dataSource]="dataSource">
+									<ng-container matColumnDef="select">
+										<mat-header-cell *matHeaderCellDef class="mat-column-checkbox">
+											<mat-checkbox (change)="$event ? masterToggle() : null" [disabled]="this.registro.disabled" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [color]="'primary'">
+											</mat-checkbox>
+										</mat-header-cell>
+										<mat-cell *matCellDef="let row" class="mat-column-checkbox">
+											<mat-checkbox (click)="$event.stopPropagation()" [disabled]="this.registro.disabled  || row.empresaDefault==1" (change)="$event ? selection.toggle(row) : null" [checked]="row.empresaDefault==1? true :selection.isSelected(row)" [color]="'primary'">
+											</mat-checkbox>
+										</mat-cell>
+									</ng-container>
+
+									<ng-container matColumnDef="empresaRUC">
+										<mat-header-cell *matHeaderCellDef class="mat-column center-cell mat-column-120">RUC</mat-header-cell>
+										<mat-cell *matCellDef="let rowItem" class="mat-column center-cell mat-column-120">{{rowItem.empresaRUC}}</mat-cell>
+									</ng-container>
+
+									<ng-container matColumnDef="empresaNombre">
+										<mat-header-cell *matHeaderCellDef class="mat-column center-cell mat-column-180">NOMBRE</mat-header-cell>
+										<mat-cell *matCellDef="let rowItem" class="mat-column mat-column-180">{{rowItem.empresaNombre}}</mat-cell>
+									</ng-container>
+
+									<ng-container matColumnDef="empresaDireccion">
+										<mat-header-cell *matHeaderCellDef class="mat-column center-cell">DIRECCIÓN</mat-header-cell>
+										<mat-cell *matCellDef="let rowItem" class="mat-column">{{rowItem.empresaDireccion}}</mat-cell>
+									</ng-container>
+
+									<ng-container matColumnDef="empresaAbreviatura">
+										<mat-header-cell *matHeaderCellDef class="mat-column center-cell mat-column-90">ABREVIATURA</mat-header-cell>
+										<mat-cell *matCellDef="let rowItem" class="mat-column center-cell mat-column-90">{{rowItem.empresaAbreviatura}}</mat-cell>
+									</ng-container>
+
+									<ng-container matColumnDef="empresaDefault">
+										<mat-header-cell *matHeaderCellDef class="mat-column center-cell mat-column-100">DEFAULT</mat-header-cell>
+										<mat-cell *matCellDef="let rowItem" class="mat-column center-cell mat-column-100">
+											<span *ngIf="rowItem.empresaDefault==1" class="kt-badge kt-badge--inline kt-badge--pill kt-badge--success kt-badge--wide">SI</span>
+											<span *ngIf="rowItem.empresaDefault!=1" class="kt-badge kt-badge--inline kt-badge--pill kt-badge--danger kt-badge--wide">NO</span>
+										</mat-cell>
+									</ng-container>
+
+									<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+									<mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+								</mat-table>
+							</div>
+						</div>
+					</mat-tab>
+					<mat-tab label="Usuario Web" [disabled]="!registro.usuarioWeb">
+						<div class="demo-tab-content">
+							<div class="form-group kt-form__group row">
+								<div class="col-lg-5 kt-margin-bottom-20-mobile">
+									<div class="row">
+										<div class="col-lg-12 kt-margin-bottom-20-mobile">
+											<mat-form-field class="mat-form-field-fluid">
+												<input matInput placeholder="Login" formControlName="usuarioWebLogin" maxlength="20" [readonly]="loginPasswordWeb" />
+												<mat-error *ngFor="let val of validations.usuarioWebLogin"><strong>{{val.message}}</strong></mat-error>
+											</mat-form-field>
+										</div>
+										<div class="col-lg-12 kt-margin-bottom-20-mobile">
+											<mat-form-field class="mat-form-field-fluid">
+												<input matInput type="password" placeholder="Password" formControlName="usuarioWebPassword" maxlength="20" />
+												<mat-error *ngFor="let val of validations.usuarioWebPassword"><strong>{{val.message}}</strong></mat-error>
+											</mat-form-field>
+										</div>
+										<div class="col-lg-12 kt-margin-bottom-20-mobile">
+											<mat-form-field class="mat-form-field-fluid">
+												<mat-select placeholder="Estado" formControlName="webEstadoID">
+													<mat-option *ngFor="let item of listadoCboEstados" [value]="item.estadoID">{{item.estadoDescripcion}}</mat-option>
+												</mat-select>
+												<mat-error *ngFor="let val of validations.webEstadoID"><strong>{{val.message}}</strong></mat-error>
+											</mat-form-field>
+										</div>
+										<div class="col-lg-12 kt-margin-bottom-20-mobile padTop10">
+											<mat-checkbox [color]="'primary'" formControlName="usuarioWebStatus">Activo</mat-checkbox>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-7 kt-margin-bottom-20-mobile">
+									<kt-portlet [class]="'kt-portlet--height-fluid'">
+										<kt-portlet-header [title]="'Perfiles'" class="bgColorCardAccesos" style="border-bottom: 1px solid #afb9bd;">
+										</kt-portlet-header>
+										<kt-portlet-body class="bgColorCardAccesos">
+
+											<div class="row">
+												<div class="col-lg-8 kt-margin-bottom-20-mobile">
+													<mat-form-field class="mat-form-field-fluid">
+														<mat-select placeholder="Perfil Web" formControlName="webPerfilID">
+															<mat-option *ngFor="let item of listadoCboPerfilesWeb" [value]="item.perfilID">{{item.perfilDescripcion}}</mat-option>
+														</mat-select>
+														<!-- <mat-error *ngFor="let val of validations.webPerfilID"><strong>{{val.message}}</strong></mat-error> -->
+													</mat-form-field>
+												</div>
+												<div class="col-lg-4 kt-margin-bottom-20-mobile">
+													<button *ngIf="!this.registro.disabled" type="button" mat-raised-button color="success" (click)="agregarPerfilWeb()" matTooltip="Agregar perfil">
+														<i class="la la-plus-circle"></i>
+														Agregar
+													</button>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-lg-12 kt-margin-bottom-20-mobile">
+													<div class="mat-table__wrapper  mat-table__wrapper--sub">
+														<mat-table class="lmat-elevation-z8" [dataSource]="dataSourcePW">
+
+															<ng-container matColumnDef="perfilDescripcion">
+																<mat-header-cell *matHeaderCellDef class="mat-column center-cell">NOMBRE DEL PERFIL</mat-header-cell>
+																<mat-cell *matCellDef="let rowItem" class="mat-column center-cell">{{rowItem.perfilDescripcion}}</mat-cell>
+															</ng-container>
+
+															<ng-container matColumnDef="actions">
+																<mat-header-cell *matHeaderCellDef class="mat-column center-cell mat-column-100">ELIMINAR</mat-header-cell>
+																<mat-cell *matCellDef="let rowItem" class="mat-column center-cell mat-column-100">
+
+																	<button mat-icon-button [disabled]="this.registro.disabled" color="warn" matTooltip="Eliminar registro" type="button" (click)="eliminarPerfilWeb(rowItem)">
+																		<mat-icon>delete</mat-icon>
+																	</button>&nbsp;
+
+																</mat-cell>
+															</ng-container>
+
+															<mat-header-row *matHeaderRowDef="displayedColumnsPWM"></mat-header-row>
+															<mat-row *matRowDef="let row; columns: displayedColumnsPWM"></mat-row>
+
+														</mat-table>
+													</div>
+												</div>
+
+											</div>
+
+										</kt-portlet-body>
+									</kt-portlet>
+								</div>
+
+							</div>
+						</div>
+					</mat-tab>
+					<mat-tab label="Usuario Movil" [disabled]="!registro.usuarioMovil">
+						<div class="demo-tab-content">
+							<div class="form-group kt-form__group row">
+								<div class="col-lg-12 kt-margin-bottom-20-mobile">
+									<div class="row">
+										<div class="col-lg-3 kt-margin-bottom-20-mobile">
+											<mat-form-field class="mat-form-field-fluid">
+												<input matInput placeholder="Login" formControlName="usuarioMovilLogin" maxlength="10" digitOnlyNumber [readonly]="loginPasswordMovil" />
+												<mat-error *ngFor="let val of validations.usuarioMovilLogin"><strong>{{val.message}}</strong></mat-error>
+											</mat-form-field>
+										</div>
+										<div class="col-lg-3 kt-margin-bottom-20-mobile">
+											<mat-form-field class="mat-form-field-fluid">
+												<input matInput type="password" placeholder="Password" formControlName="usuarioMovilPassword" />
+												<mat-error *ngFor="let val of validations.usuarioMovilPassword"><strong>{{val.message}}</strong></mat-error>
+											</mat-form-field>
+										</div>
+										<div class="col-lg-2 kt-margin-bottom-20-mobile">
+											<mat-form-field class="mat-form-field-fluid">
+												<mat-select placeholder="Estado" formControlName="movilEstadoID">
+													<mat-option *ngFor="let item of listadoCboEstados" [value]="item.estadoID">{{item.estadoDescripcion}}</mat-option>
+												</mat-select>
+												<mat-error *ngFor="let val of validations.movilEstadoID"><strong>{{val.message}}</strong></mat-error>
+											</mat-form-field>
+										</div>
+										<div class="col-lg-1 kt-margin-bottom-20-mobile padTop10">
+											<mat-checkbox [color]="'primary'" formControlName="usuarioMovilStatus">Activo</mat-checkbox>
+										</div>
+										<div class="col-lg-3 kt-margin-bottom-20-mobile">
+											<mat-form-field class="mat-form-field-fluid">
+												<mat-select placeholder="Área" formControlName="areaID">
+													<mat-option *ngFor="let item of listadoCboAreas" [value]="item.codigo">{{item.descripcion}}</mat-option>
+												</mat-select>
+											</mat-form-field>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-12 kt-margin-bottom-20-mobile">
+									<div class="row">
+										<div class="col-lg-4 kt-margin-bottom-20-mobile">
+											<mat-form-field class="mat-form-field-fluid">
+												<mat-select placeholder="Tipos de bandeja para cosecha" formControlName="movilBacoID" multiple>
+													<mat-option *ngFor="let item of listadoCboBandejas" [value]="item.codigo">{{item.descripcion}}</mat-option>
+												</mat-select>
+												<!-- <mat-error *ngFor="let val of validations.movilBacoID"><strong>{{val.message}}</strong></mat-error> -->
+											</mat-form-field>
+										</div>
+										<div class="col-lg-4 kt-margin-bottom-20-mobile">
+											<mat-form-field class="mat-form-field-fluid">
+												<mat-select placeholder="Lista CAE" formControlName="movilCAEID" multiple>
+													<mat-option *ngFor="let item of listadoCboCAE" [value]="item.codigo">{{item.descripcion}}</mat-option>
+												</mat-select>
+												<!-- <mat-error *ngFor="let val of validations.movilCAEID"><strong>{{val.message}}</strong></mat-error> -->
+											</mat-form-field>
+										</div>
+										<div class="col-lg-4 kt-margin-bottom-20-mobile">
+											<mat-form-field class="mat-form-field-fluid">
+												<mat-select placeholder="Acopios comedor" formControlName="movilAcopioComedorID" multiple>
+													<mat-option *ngFor="let item of listadoCboAcopiosComedor" [value]="item.codigo">{{item.descripcion}}</mat-option>
+												</mat-select>
+												<!-- <mat-error *ngFor="let val of validations.movilAcopioComedorID"><strong>{{val.message}}</strong></mat-error> -->
+											</mat-form-field>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-12 kt-margin-bottom-20-mobile">
+									<div class="row">
+										<div class="col-lg-5 kt-margin-bottom-20-mobile">
+											<kt-portlet [class]="'kt-portlet--height-fluid'">
+												<kt-portlet-header [title]="'Perfiles'" class="bgColorCardAccesos" style="border-bottom: 1px solid #afb9bd;">
+												</kt-portlet-header>
+												<kt-portlet-body class="bgColorCardAccesos">
+
+													<div class="row">
+														<div class="col-lg-8 kt-margin-bottom-20-mobile">
+															<mat-form-field class="mat-form-field-fluid">
+																<mat-select placeholder="Perfil Movil" formControlName="movilPerfilID">
+																	<mat-option *ngFor="let item of listadoCboPerfilesMovil" [value]="item.perfilID">{{item.perfilDescripcion}}</mat-option>
+																</mat-select>
+																<!-- <mat-error *ngFor="let val of validations.movilPerfilID"><strong>{{val.message}}</strong></mat-error> -->
+															</mat-form-field>
+														</div>
+														<div class="col-lg-4 kt-margin-bottom-20-mobile">
+															<button *ngIf="!this.registro.disabled" type="button" mat-raised-button color="success" (click)="agregarPerfilMovil()" matTooltip="Agregar perfil">
+																<i class="la la-plus-circle"></i>
+																Agregar
+															</button>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-lg-12 kt-margin-bottom-20-mobile">
+															<div class="mat-table__wrapper  mat-table__wrapper--sub">
+																<mat-table class="lmat-elevation-z8" [dataSource]="dataSourcePM">
+
+																	<ng-container matColumnDef="perfilDescripcion">
+																		<mat-header-cell *matHeaderCellDef class="mat-column center-cell">NOMBRE DEL PERFIL</mat-header-cell>
+																		<mat-cell *matCellDef="let rowItem" class="mat-column center-cell">{{rowItem.perfilDescripcion}}</mat-cell>
+																	</ng-container>
+
+																	<ng-container matColumnDef="actions">
+																		<mat-header-cell *matHeaderCellDef class="mat-column center-cell mat-column-80">ELIMINAR</mat-header-cell>
+																		<mat-cell *matCellDef="let rowItem" class="mat-column center-cell mat-column-80">
+
+																			<button mat-icon-button [disabled]="this.registro.disabled" color="warn" matTooltip="Eliminar registro" type="button" (click)="eliminarPerfilMovil(rowItem)">
+																				<mat-icon>delete</mat-icon>
+																			</button>&nbsp;
+
+																		</mat-cell>
+																	</ng-container>
+
+																	<mat-header-row *matHeaderRowDef="displayedColumnsPWM"></mat-header-row>
+																	<mat-row *matRowDef="let row; columns: displayedColumnsPWM"></mat-row>
+
+																</mat-table>
+															</div>
+														</div>
+
+													</div>
+
+												</kt-portlet-body>
+											</kt-portlet>
+										</div>
+										<div class="col-lg-7 kt-margin-bottom-20-mobile">
+											<kt-portlet [class]="'kt-portlet--height-fluid'">
+												<kt-portlet-header [title]="'Configuraciones'" class="bgColorCardAccesos" style="border-bottom: 1px solid #afb9bd;">
+												</kt-portlet-header>
+												<kt-portlet-body class="bgColorCardAccesos">
+
+													<div class="row">
+														<div class="col-lg-5 kt-margin-bottom-20-mobile">
+															<mat-form-field class="mat-form-field-fluid">
+																<mat-select placeholder="Tipo configuración" formControlName="tipoConfiguracionID">
+																	<mat-option *ngFor="let item of listadoCboTipoConfiguracion" [value]="item.tipoID">{{item.tipoDescripcion}}</mat-option>
+																</mat-select>
+																<!-- <mat-error *ngFor="let val of validations.tipoConfiguracionID"><strong>{{val.message}}</strong></mat-error> -->
+															</mat-form-field>
+														</div>
+														<div class="col-lg-5 kt-margin-bottom-20-mobile">
+															<mat-form-field class="mat-form-field-fluid">
+																<mat-select placeholder="Configuración" formControlName="configuracionID">
+																	<mat-option *ngFor="let item of filtradoCboConfiguracion" [value]="item.configID">{{item.configDescripcion}}</mat-option>
+																</mat-select>
+																<!-- <mat-error *ngFor="let val of validations.configuracionID"><strong>{{val.message}}</strong></mat-error> -->
+															</mat-form-field>
+														</div>
+														<div class="col-lg-2 kt-margin-bottom-20-mobile">
+															<button *ngIf="!this.registro.disabled" type="button" mat-raised-button color="success" (click)="agregarConfiguracion()" matTooltip="Agregar configuración">
+																<i class="la la-plus-circle"></i>
+																Agregar
+															</button>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-lg-12 kt-margin-bottom-20-mobile">
+															<div class="mat-table__wrapper  mat-table__wrapper--sub">
+																<mat-table class="lmat-elevation-z8" [dataSource]="dataSourceConfig">
+
+																	<ng-container matColumnDef="tipoDescripcion">
+																		<mat-header-cell *matHeaderCellDef class="mat-column center-cell">T.CONFIGURACIÓN</mat-header-cell>
+																		<mat-cell *matCellDef="let rowItem" class="mat-column center-cell">{{rowItem.tipoDescripcion}}</mat-cell>
+																	</ng-container>
+
+																	<ng-container matColumnDef="configDescripcion">
+																		<mat-header-cell *matHeaderCellDef class="mat-column center-cell">CONFIGURACIÓN</mat-header-cell>
+																		<mat-cell *matCellDef="let rowItem" class="mat-column center-cell">{{rowItem.configDescripcion}}</mat-cell>
+																	</ng-container>
+
+																	<ng-container matColumnDef="actions">
+																		<mat-header-cell *matHeaderCellDef class="mat-column center-cell mat-column-80">ELIMINAR</mat-header-cell>
+																		<mat-cell *matCellDef="let rowItem" class="mat-column center-cell mat-column-80">
+
+																			<button mat-icon-button [disabled]="this.registro.disabled" color="warn" matTooltip="Eliminar registro" type="button" (click)="eliminarConfiguracion(rowItem)">
+																				<mat-icon>delete</mat-icon>
+																			</button>&nbsp;
+
+																		</mat-cell>
+																	</ng-container>
+
+																	<mat-header-row *matHeaderRowDef="displayedColumnsConfig"></mat-header-row>
+																	<mat-row *matRowDef="let row; columns: displayedColumnsConfig"></mat-row>
+
+																</mat-table>
+															</div>
+														</div>
+													</div>
+
+												</kt-portlet-body>
+											</kt-portlet>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</mat-tab>
+				</mat-tab-group>
+			</div>
+		</form>
+	</kt-portlet-body>
+</div>

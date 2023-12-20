@@ -1,0 +1,132 @@
+<kt-portlet>
+
+    <kt-portlet-header [class]="'kt-portlet__head--lg'"  >
+        <ng-container ktPortletTitle>
+          <h3 class="kt-portlet__head-title">
+            <span>Mantenimiento de Usuarios</span>
+          </h3>
+        </ng-container>
+        <ng-container ktPortletTools *ngIf="currentView == 'principal'" >
+          <button mat-raised-button matTooltip="Consultar" (click)="fn_Consultar()" color="primary" type="button" style="margin-right: 5px;" [disabled]="progressflag" >
+             <i class="la la-search"></i>&nbsp;
+            <span class="kt-hidden-mobile">Consultar</span>
+          </button>
+        </ng-container>
+        <ng-container ktPortletTools *ngIf="currentView == 'principal'" >
+          <button mat-raised-button matTooltip="Consultar" (click)="fn_NuevoItem()" color="primary" type="button" style="margin-right: 5px;">
+            <i class="la la-plus"></i>&nbsp;
+           <span class="kt-hidden-mobile">Nuevo</span>
+         </button>
+        </ng-container>
+        <ng-container ktPortletTools *ngIf="currentView != 'principal'"  >
+            <button mat-raised-button matTooltip="Consultar" (click)="fn_save()" color="primary" type="button" style="margin-right: 5px;" [disabled]="progressflag" >
+              <i class="la la-save"></i>&nbsp;
+             <span class="kt-hidden-mobile">Guardar</span>
+           </button>
+          </ng-container>
+        <ng-container ktPortletTools *ngIf="currentView != 'principal'"  >
+            <button mat-raised-button matTooltip="Consultar" (click)="fn_navigation('principal')" color="primary" type="button" style="margin-right: 5px;">
+              <i class="la la-angle-left"></i>&nbsp;
+             <span class="kt-hidden-mobile">Regresar</span>
+           </button>
+          </ng-container>
+      </kt-portlet-header>
+      
+      <kt-portlet-body>
+     
+<div *ngIf="progressflag" > <progress style="width: 50%;"></progress> </div>
+<div *ngIf="currentView == 'principal'"  > 
+  
+  <div *ngIf="newEditformFlagShowMessageErr == true" style="color: red;">{{newEditformFlagValidateMessage}}</div>
+  
+<div>
+    <ps-html-form 
+    [jsonHtmlFormStructure]="searchBox"
+    [jsonLanguageTags]="currentLanguageTags"
+    [inputDataObject]="searchBoxData"
+    (outputDataForm)="getSearchBoxData($event)"
+
+    [flagFormReadOnly]=false
+    [flagFormValidate]="searchBoxFlagValidate"
+    (outputValidateDataForm)="getSearchBoxValidation($event)"
+    
+    >
+  
+    </ps-html-form>
+</div>
+
+
+<div>
+    <ps-html-table
+    [jsonHtmlTableStructure]="tableSearchBox"
+    [jsonLanguageTags]="currentLanguageTags"
+    [inputDataObject]="tableSearchBoxData"
+    [tablePageRowSize]="objtablePageRowSize"
+    [tableTitle]="tableSearchBoxTitle"
+    
+    [flagTableReadOnly]=false
+    [tableHeadLineHeightPage]="curTableHeadLineHeightPage"
+    [tableLineHeightPage]="curTableLineHeightPage"
+    (outputCurrentDataItemTable)="fn_getItemTableSearchBoxData($event)"
+    >
+  
+    </ps-html-table>
+  </div>
+
+</div>
+
+
+<div *ngIf="currentView == 'new'"  > 
+
+    <div *ngIf="newEditformFlagShowMessageErr == true" style="color: red;">{{newEditformFlagValidateMessage}}</div>
+    <div *ngIf="newEditformFlagShowMessageOk == true" style="color: green;">{{newEditformFlagValidateMessage}}</div>
+
+    <div>
+        <ps-html-form 
+        [jsonHtmlFormStructure]="newEditform"
+        [jsonLanguageTags]="currentLanguageTags"
+        [inputDataObject]="newEditformData"
+        (outputDataForm)="getNewEditFormData($event)"
+    
+        [flagFormReadOnly]=false
+        [flagFormValidate]=true
+        [flagFormValidateFlag]="newEditformFlagValidate"
+        (outputValidateDataForm)="getNewEditFormValidation($event)"
+        
+        >
+      
+        </ps-html-form>
+    </div>
+
+
+ </div>   
+
+
+ <div *ngIf="currentView == 'edit'"  > 
+
+    <div *ngIf="newEditformFlagShowMessageErr == true" style="color: red;">{{newEditformFlagValidateMessage}}</div>
+    <div *ngIf="newEditformFlagShowMessageOk == true" style="color: green;">{{newEditformFlagValidateMessage}}</div>
+
+    <div>
+        <ps-html-form 
+        [jsonHtmlFormStructure]="newEditformE"
+        [jsonLanguageTags]="currentLanguageTags"
+        [inputDataObject]="newEditformData"
+        (outputDataForm)="getNewEditFormData($event)"
+    
+        [flagFormReadOnly]=false
+        [flagFormValidate]=true
+        [flagFormValidateFlag]="newEditformFlagValidate"
+        (outputValidateDataForm)="getNewEditFormValidation($event)"
+        
+        >
+      
+        </ps-html-form>
+    </div>
+
+
+</div>  
+
+</kt-portlet-body>
+
+</kt-portlet>

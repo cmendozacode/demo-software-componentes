@@ -1,0 +1,72 @@
+export class SolicitudServicioModel {
+	solicitudServicioID: number;
+	programaServicioID: number;
+	solicitudCodigo: string;
+	fechaSolicitud: string
+	empresaID: number;
+	empresaNombre: string;
+	actividadID: number;
+	actividadNombre: string;
+	areaID: number;
+	areaNombre: string;
+	ubigeoID: number;
+	ubigeoNombre: string;
+	centroCostoID: number;
+	centroCostoCodigo: string;
+	centroCostoNombre?: string;
+	centroCostoOrdenEstadistica?: string;
+	tipoCamionID: number;
+	tipoCamionNombre: string;
+	capacidadID: number;
+	capacidadNombre: string;
+	cantidad: number;
+	cantidadProgramada: number;
+	horaInicio: string;
+	semanasIDs: string;
+	semanasDesc: string;
+	diasProgramados: string;
+	diasProgramadosDesc: string;
+	solicitanteID: number;
+	solicitanteNombres: string;
+	aprobadorID: number;
+	aprobadorNombres: string;
+	plannerID: number;
+	pannerNombres: string;
+	descripcion: string;
+	observacion: string;
+	estado: number;
+	estadoNombre: string;
+	solicitudServicioCopiaID: number;
+	jsonDetalles: string;
+
+	clear() {
+		this.solicitudServicioID = 0;
+		this.programaServicioID = 0;
+		this.solicitudCodigo = "";
+		this.fechaSolicitud = "";
+		this.empresaID = 0;
+		this.actividadID = 0;
+		this.areaID = 0;
+		this.ubigeoID = 0;
+		this.centroCostoID = 0;
+		this.centroCostoCodigo = "";
+		this.centroCostoNombre = "";
+		this.centroCostoOrdenEstadistica = "";
+		this.tipoCamionID = 0;
+		this.capacidadID = 0;
+		this.cantidad = 1;
+		this.cantidadProgramada = 0;
+		this.horaInicio = "07:00";
+		this.semanasIDs = "";
+		this.diasProgramados = "";
+		this.solicitanteID = 0;
+		this.aprobadorID = 0;
+		this.plannerID = 0;
+		this.descripcion = "";
+		this.observacion = "";
+		this.estado = 1;
+		this.estadoNombre = "PENDIENTE";
+		this.solicitudServicioCopiaID = 0;
+		this.jsonDetalles = "";
+	}
+}

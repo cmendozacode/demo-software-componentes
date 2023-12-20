@@ -1,0 +1,91 @@
+<div class="kt-portlet" [ngClass]="{ 'kt-portlet--body-progress kt-portlet--body-progress-overlay' : viewLoading }">
+	<kt-portlet-header [title]="getTitle()" [class]="'kt-portlet__head--lg'">
+		<ng-container ktPortletTools>
+			<a [routerLink]="['../perfil']" class="btn btn-secondary kt-margin-r-10" mat-raised-button matTooltip="Regresar a la lista">
+				<i class="la la-arrow-left"></i>
+				<span class="kt-hidden-mobile">Cancelar</span>
+			</a>
+			<button mat-raised-button
+				matTooltip="Guardar Cambios"
+				type="button"
+				color="primary"
+				class="btn kt-margin-r-10"
+				(click)="guardarRegistro()"
+				*ngIf="!this.registro.perfilDisabled"
+				[disabled]="viewLoading || registroForm.invalid || !currentUsuario">
+				<i class="la la-save"></i>
+				<span class="kt-hidden-mobile">Guardar</span>
+			</button>
+		</ng-container>
+	</kt-portlet-header>
+	<kt-portlet-body>
+		<form class="kt-form" [formGroup]="registroForm">
+			<div class="kt-portlet__body">
+				<div class="kt-portlet__body-progress">
+					<mat-spinner [diameter]="20"></mat-spinner>
+				</div>
+				<kt-alert *ngIf="hasFormErrors" type="{{typeAlert}}" [duration]="30000" [showCloseButton]="true" (close)="onAlertClose($event)">
+					{{messageAlert}}
+				</kt-alert>
+				<div class="form-group kt-form__group row">
+					<div class="col-lg-4 kt-margin-bottom-20-mobile">
+						<mat-form-field class="mat-form-field-fluid">
+							<input matInput upperCase placeholder="Descripción" formControlName="perfilDescripcion" maxlength="150" />
+							<mat-error *ngFor="let val of validations.perfilDescripcion"><strong>{{val.message}}</strong></mat-error>
+						</mat-form-field>
+					</div>
+					<div class="col-lg-3 kt-margin-bottom-20-mobile">
+						<mat-form-field class="mat-form-field-fluid">
+							<mat-select placeholder="Tipo Perfil" formControlName="perfilWebMovilID">
+								<mat-option [value]="1">WEB</mat-option>
+								<mat-option [value]="2">MÓVIL</mat-option>
+							</mat-select>
+							<mat-error *ngFor="let val of validations.perfilWebMovilID"><strong>{{val.message}}</strong></mat-error>
+						</mat-form-field>
+					</div>
+					<div class="col-lg-3 kt-margin-bottom-20-mobile">
+						<mat-form-field class="mat-form-field-fluid">
+							<mat-select placeholder="Estado" formControlName="perfilStatus">
+								<mat-option [value]="1">ACTIVO</mat-option>
+								<mat-option [value]="0">INACTIVO</mat-option>
+							</mat-select>
+						</mat-form-field>
+					</div>
+				</div>
+				<div class="form-group kt-form__group row">
+					<div class="col-lg-6 kt-margin-bottom-20-mobile">
+						<kt-portlet [class]="'kt-portlet--height-fluid'">
+							<kt-portlet-header [title]="'Accesos Disponibles'" class="bgColorCardAccesos" style="border-bottom: 1px solid #afb9bd;">
+							</kt-portlet-header>
+							<kt-portlet-body class="bgColorCardAccesos">
+								<ngx-treeview [config]="config" [items]="items" (selectedChange)="onSelectedChange($event)">
+								</ngx-treeview>
+							</kt-portlet-body>
+						</kt-portlet>
+					</div>
+					<div class="col-lg-6 kt-margin-bottom-20-mobile">
+						<kt-portlet [class]="'kt-portlet--height-fluid'">
+							<kt-portlet-header [title]="'Accesos Asignados'" class="bgColorCardAccesos" style="border-bottom: 1px solid #afb9bd;"></kt-portlet-header>
+							<kt-portlet-body [class]="'kt-portlet__body bgColorCardAccesos'">
+								<mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="bgColorCardAccesos">
+									<mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+										<button mat-icon-button disabled></button>
+										{{node.name}}
+									</mat-tree-node>
+									<mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+										<button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+											<mat-icon class="mat-icon-rtl-mirror">
+												{{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+											</mat-icon>
+										</button>
+										{{node.name}}
+									</mat-tree-node>
+								</mat-tree>
+							</kt-portlet-body>
+						</kt-portlet>
+					</div>
+				</div>
+			</div>
+		</form>
+	</kt-portlet-body>
+</div>

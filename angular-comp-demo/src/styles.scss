@@ -1,0 +1,141 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import "~material-design-icons/iconfont/material-icons.css";
+@import "~highlight.js/styles/googlecode.css";
+
+// header base skins
+.kt-header-base-light {
+	@import "sass/global/layout/header/skins/base/light.scss";
+}
+.kt-header-base-dark {
+	@import "sass/global/layout/header/skins/base/dark.scss";
+}
+
+// header menu skins
+.kt-header-menu-light {
+	@import "sass/global/layout/header/skins/menu/light.scss";
+}
+.kt-header-menu-dark {
+	@import "sass/global/layout/header/skins/menu/dark.scss";
+}
+
+// brand skins
+.kt-brand-dark {
+	@import "sass/global/layout/brand/skins/dark.scss";
+}
+.kt-brand-light {
+	@import "sass/global/layout/brand/skins/light.scss";
+}
+
+// aside skins
+.kt-aside-dark {
+	@import "sass/global/layout/aside/skins/dark.scss";
+}
+.kt-aside-light {
+	@import "sass/global/layout/aside/skins/light.scss";
+}
+
+// hide bootstrap dropdown arrow globally
+.dropdown-toggle::after {
+	display: none !important;
+}
+
+.mat-table__wrapper--dashboard .mat-table {
+	min-width: 600px !important;
+	width: 100% !important;
+}
+
+.position-static {
+	position: static;
+}
+
+
+//Estilos personalizados por IrvingCruz
+
+.kt-mat-alert {
+	&.kt-mat-alert--warningYapu {
+		background: #e6a021;
+	}
+	&.kt-mat-alert--dangerYapu {
+		background: #cc0505d8;
+	}
+}
+
+.footerForm {
+	padding: 12px !important;
+}
+
+.padTop10 {
+	padding-top: 10px;
+}
+
+.bgColorCardAccesos {
+    background-color: #ecedf3;
+}
+
+.divideCard {
+    border-bottom: #afb9bd;
+}
+
+select {
+	width: 100% !important;
+}
+
+.mat-select-value {
+	color: #646c9a !important;
+}
+
+.margin-lr-filter {
+	margin-left: 25px;
+	margin-right: 10px;
+
+}
+
+.paddingFiltros{
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+
+.labelLoteDisponible{
+    background: rgba(255, 255, 255, 0);
+    border:0;
+    border-radius:0px;
+    box-shadow: 0 0px 0px;
+	font-size: 9px;
+}
+
+.labelLoteCerradoMon,
+.labelLoteCerradoTue,
+.labelLoteCerradoWed,
+.labelLoteCerradoThu,
+.labelLoteCerradoFri,
+.labelLoteCerradoSat,
+.labelLoteCerradoSun{
+    border:0;
+    border-radius:0px;
+	font-size: 8px;
+	top: 15px;
+}
+
+.labelLoteCerradoMon{
+    background: #8E27E4;
+}
+.labelLoteCerradoTue{
+    background: #006ED8;
+}
+.labelLoteCerradoWed{
+    background: #03E7D0;
+}
+.labelLoteCerradoThu{
+    background: #F70BCF;
+}
+.labelLoteCerradoFri{
+    background: #E3E135;
+}
+.labelLoteCerradoSat{
+    background: #FF8F00;
+}
+.labelLoteCerradoSun{
+    background: #F00407;
+}

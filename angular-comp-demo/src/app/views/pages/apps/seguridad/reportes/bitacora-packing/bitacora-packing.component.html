@@ -1,0 +1,149 @@
+<kt-portlet>
+    <kt-portlet-header [class]="'kt-portlet__head--lg'">
+		<ng-container ktPortletTitle>
+			<h3 class="kt-portlet__head-title">
+				<span>{{getTituloReporte()}}</span>
+			</h3>
+		</ng-container>
+
+		<ng-container ktPortletTools>
+            <button mat-raised-button matTooltip="Consultar Información" (click)="consultarReporte()" color="primary" type="button"  [disabled]=getButtonConsultaDisabled()>
+                <i class="la la-search"></i>
+                <span>&nbsp;Buscar</span>
+			</button>
+		</ng-container>
+    </kt-portlet-header>
+    
+    <kt-portlet-body>
+		<div class="kt-form">
+			<form class="kt-form" [formGroup]="filterForm">
+                <div class="row align-items-center">
+
+                        <div class="col-md-2 kt-margin-bottom-10-mobile">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [matDatepicker]="pickerFecIni" [max]="maxDate" placeholder="Fecha Desde" formControlName="fechaIniControl">
+                                <mat-datepicker-toggle matSuffix [for]="pickerFecIni"></mat-datepicker-toggle>
+                                <mat-datepicker #pickerFecIni></mat-datepicker>
+                                <mat-hint align="start">
+                                    <strong>Filtro</strong> fecha desde
+                                </mat-hint>
+                            </mat-form-field>
+                        </div>
+    
+                        <div class="col-md-2 kt-margin-bottom-10-mobile">
+                            <mat-form-field class="mat-form-field-fluid">
+                                <input matInput [matDatepicker]="pickerFecFin" [max]="maxDate" placeholder="Fecha Hasta" formControlName="fechaFinControl">
+                                <mat-datepicker-toggle matSuffix [for]="pickerFecFin"></mat-datepicker-toggle>
+                                <mat-datepicker #pickerFecFin></mat-datepicker>
+                                <mat-hint align="start">
+                                    <strong>Filtro</strong> fecha hasta
+                                </mat-hint>
+                            </mat-form-field>
+                        </div>
+                </div>
+			</form>
+        </div>
+    </kt-portlet-body>
+</kt-portlet>
+
+<div class="row" [hidden]="reportePrimeraCarga">
+	<div class="col-xl-12">
+		<div class="kt-portlet" [ngClass]="{'kt-portlet--body-progress kt-portlet--body-progress-overlay' : viewLoading }">
+			<kt-portlet-header [title]="getTituloResultados()" *ngIf="reporteErrorText.length<=0"  [class]="'kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm'">
+				<ng-container ktPortletTools >
+                    <div class="kt-portlet__head-toolbar" [hidden]="viewLoading || !reporteEjecutado || reporteSinResultados || reporteError">
+                        <div class="kt-margin-r-10">
+                            <input matInput upperCase placeholder="Buscar Registros" [(ngModel)]="filtroReporte" (keyup)="filterResultados($event.target.value)">
+                        </div>
+                        <button mat-button [matMenuTriggerFor]="menuExport">
+                            <span>Exportar</span>
+                        </button>
+                        <mat-menu #menuExport="matMenu">
+                            <button mat-menu-item (click)="exporterRep.exportTable('xlsx', {fileName:'Bitacora_tareo_packing', sheet: 'bitacora_tareo_packing', Props: {Author: 'Yapu'}})">
+                                <mat-icon>cloud_download</mat-icon>
+                                <span>Excel</span>
+                            </button>
+                            <button mat-menu-item (click)="exporterRep.exportTable('csv', {fileName:'Bitacora_tareo_packing'})">
+                                <mat-icon>cloud_download</mat-icon>
+                                <span>CSV</span>
+                            </button>
+                            <button mat-menu-item (click)="exporterRep.exportTable('txt', {fileName:'Bitacora_tareo_packing'})">
+                                <mat-icon>cloud_download</mat-icon>
+                                <span>TXT</span>
+                            </button>
+                        </mat-menu>
+                    </div>
+                </ng-container>
+			</kt-portlet-header>
+			<kt-portlet-body [class]="'kt-portlet__body--fit'">
+                <div class="kt-portlet__body-progress">
+                    <mat-spinner [diameter]="30"></mat-spinner>
+                </div>
+                <div class="kt-portlet__body" *ngIf="viewLoading || reporteSinResultados || reporteError">
+                    <div class="result-get-data">
+                        <h5 class="kt-widget1__number kt-font-danger">{{reporteErrorText}}</h5>
+                    </div>
+                </div>
+                <div [hidden]="viewLoading || !reporteEjecutado || reporteSinResultados">
+				    <div class="mat-table__wrapper">
+                        <mat-table class="lmat-elevation-z8"
+                            #table
+                            [dataSource]="dataSource" 
+                            matSort 
+                            #sortRep="matSort"
+                            matTableExporter
+                            #exporterRep= "matTableExporter"
+                            matSortDisableClear>
+
+                            <ng-container matColumnDef="fecha">
+                                <mat-header-cell *matHeaderCellDef class="mat-column center-cell mat-column-90">Fecha</mat-header-cell>
+                                <mat-cell *matCellDef="let registro" class="mat-column center-cell mat-column-90">{{getFechaFormat(registro.fechaMovil)}}</mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="usuario">
+                                <mat-header-cell *matHeaderCellDef class="mat-column center-cell mat-column-100">Usuario</mat-header-cell>
+                                <mat-cell *matCellDef="let registro" class="mat-column center-cell mat-column-100">{{registro.username}}</mat-cell>
+                            </ng-container>
+                    
+                            <ng-container matColumnDef="nombreusuario">
+                                <mat-header-cell *matHeaderCellDef class="mat-column center-cell">Nombre Usuario</mat-header-cell>
+                                <mat-cell *matCellDef="let registro" class="mat-column">{{registro.nombre}}</mat-cell>
+                            </ng-container>
+                    
+                            <ng-container matColumnDef="grupo">
+                                <mat-header-cell *matHeaderCellDef class="mat-column center-cell mat-column-70">Grupo</mat-header-cell>
+                                <mat-cell *matCellDef="let registro" class="mat-column center-cell mat-column-70">N.A.</mat-cell>
+                            </ng-container>
+                    
+                            <ng-container matColumnDef="actividad">
+                                <mat-header-cell *matHeaderCellDef class="mat-column center-cell">Actividad</mat-header-cell>
+                                <mat-cell *matCellDef="let registro" class="mat-column ">{{registro.actividad}}</mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="legajo">
+                                <mat-header-cell *matHeaderCellDef class="mat-column center-cell mat-column-100">Trabajador</mat-header-cell>
+                                <mat-cell *matCellDef="let registro" class="mat-column center-cell mat-column-100">{{registro.codTrabajador}}</mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="horaequipo">
+                                <mat-header-cell *matHeaderCellDef class="mat-column center-cell mat-column-100">Hora Equipo</mat-header-cell>
+                                <mat-cell *matCellDef="let registro" class="mat-column center-cell mat-column-100">{{registro.horaMovil}}</mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="horareal">
+                                <mat-header-cell *matHeaderCellDef class="mat-column center-cell mat-column-100">Hora Real</mat-header-cell>
+                                <mat-cell *matCellDef="let registro" class="mat-column center-cell mat-column-100">{{registro.horaReal}}</mat-cell>
+                            </ng-container>
+                    
+                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                        </mat-table>
+                    </div>
+                    <div class="mat-table__bottom">
+                        <mat-paginator [pageSize]="30" [pageSizeOptions]="pageSizeOptions" [length]="registrosResult.length" [showFirstLastButtons]="true"></mat-paginator>
+                    </div>
+                </div>
+			</kt-portlet-body>
+		</div>
+    </div>
+</div>

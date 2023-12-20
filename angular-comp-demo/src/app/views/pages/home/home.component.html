@@ -1,0 +1,24 @@
+<ng-template ngxPermissionsOnly="accessToCosechaModuleReportesDashboard"
+	[ngxPermissionsOnlyThen]="SiCosechaModuleReportesDashboard"
+	[ngxPermissionsOnlyElse]="NoCosechaModuleReportesDashboard">
+</ng-template>
+<ng-template #SiCosechaModuleReportesDashboard>
+	<kt-dashboard-cosecha></kt-dashboard-cosecha>
+</ng-template>
+<ng-template #NoCosechaModuleReportesDashboard>
+
+
+
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-12" style="padding-right: 0px; padding-left: 0px;">
+				<p align="center" style="margin-top: 0; margin-bottom: 0;">
+					<picture>
+						<source srcset="assets/img/home-mobile.png" media="(max-width: 600px)">
+						<source srcset="assets/img/home-pc.png">
+						<img src="assets/img/home-pc.png" width="75%" height="50%" alt="Home">
+					</picture>
+				</p>
+			</div>
+		</div>
+
+</ng-template>

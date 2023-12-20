@@ -1,0 +1,36 @@
+<!-- begin::Offcanvas Toolbar Quick Actions -->
+<div ktOffcanvas [options]="offcanvasOptions" id="kt_quick_panel" class="kt-quick-panel" [ngStyle]="{'overflow': 'hidden'}">
+	<a href="javascript:;" class="kt-quick-panel__close" id="kt_quick_panel_close_btn"><i class="flaticon2-delete"></i></a>	
+	<div class="kt-quick-panel__nav">
+		<ul ktTabClickEvent class="nav nav-tabs nav-tabs-line nav-tabs-bold nav-tabs-line-3x nav-tabs-line-brand kt-notification-item-padding-x" role="tablist">
+			<li class="nav-item">
+				<a class="nav-link active" href="javascript:;" (click)="tab.select('tab-id-1');" role="tab">Cultivos Disponibles</a>
+			</li>
+		</ul>
+	</div>
+
+	<div class="kt-quick-panel__content">
+		<ngb-tabset #tab="ngbTabset">
+			<ngb-tab id="tab-id-1">
+				<ng-template ngbTabContent  *ngIf="cultivo$ | async as _cultivo">
+					<div [perfectScrollbar]="{wheelPropagation: false}" [ngStyle]="{'max-height': '85vh', 'position': 'relative'}" class="kt-notification">
+						<a href="javascript:;" class="kt-notification__item" *ngFor="let cultivo of cultivos" (click)="selectCultivo(cultivo)">
+							<div class="kt-notification__item-icon">
+								<i class="flaticon-star" [ngClass]="{'kt-font-success':cultivo.cultivoID==_cultivo.cultivoID,'kt-font-warning':cultivo.cultivoID!=_cultivo.cultivoID}"></i>
+							</div>
+							<div class="kt-notification__item-details">
+								<div class="kt-notification__item-title">
+									{{cultivo.cultivoNombre}}
+								</div>
+								<div class="kt-notification__item-time">
+									Cosecha de {{cultivo.cultivoNombre}}
+								</div>
+							</div>
+						</a>
+					</div>
+				</ng-template>
+			</ngb-tab>
+		</ngb-tabset>
+	</div>
+</div>
+<!-- end::Offcanvas Toolbar Quick Actions -->

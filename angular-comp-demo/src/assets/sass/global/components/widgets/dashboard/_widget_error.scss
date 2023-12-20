@@ -1,0 +1,96 @@
+.kt-widget_error {
+    .kt-widget_error__item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom:0.5rem;
+        padding-bottom: 0.5rem;
+
+        .kt-widget_error__content {
+            display: flex; 
+            align-items: center;
+
+            .material-icons {
+                padding-right: 1.25rem;
+            }
+
+            .kt-widget_error__title {
+                font-size: 1rem;
+                font-weight: 400;
+                color: kt-get($kt-state-colors, danger, base);
+                transition: color 0.3s ease;
+
+                &:hover {
+                    color: kt-brand-color();
+                    transition: color 0.3s ease;
+                }
+            }
+
+            .kt-widget_error__desc {
+                margin: 0;
+                padding: 0.4rem 0;
+                font-size: 1rem;
+                font-weight: 300;
+                color: kt-base-color(label, 2);
+            }
+
+            .kt-widget_error__info {
+                span:nth-child(even) {
+                    font-weight: 300; 
+                    margin-right: 0.7rem;  
+                }
+            }
+
+            .kt-widget_error__stats {
+                display: flex;
+                flex-direction: column;
+
+                .kt-widget_error__number {
+                    font-size: 1.3rem;
+                    font-weight: 500;
+                    color: kt-get($kt-state-colors, danger, base);
+                }  
+
+                &:first-child {
+                    padding-right: 3rem;
+                }                    
+            }
+
+            &:last-child {
+                flex-grow: 1;                 
+                text-align: right;
+                justify-content: flex-end;
+                padding-left: 1rem;
+            }
+        } 
+
+        border-bottom: 0.07rem dashed kt-base-color(grey, 2);
+
+        &:last-child {
+            border-bottom: 0;
+        }        
+    }                
+} 
+
+
+@include kt-tablet-and-mobile {
+    .kt-widget_error {
+        padding: 1rem;  
+
+        .kt-widget_error__item {
+            .kt-widget_error__content {
+                
+                .kt-widget_error__stats {
+                    .kt-widget_error__number {
+                        font-size: 1.2rem;
+                        font-weight: 500;                        
+                    }                   
+
+                    &:first-child {
+                        padding-right: 1rem;
+                    }                    
+                }
+            }
+        }
+    }        
+}

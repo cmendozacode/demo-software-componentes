@@ -1,0 +1,38 @@
+<div class="kt-widget4">
+	<ng-container *ngFor="let item of data">
+		<ng-container [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{item: item}"></ng-container>
+	</ng-container>
+</div>
+
+<ng-template #itemTemplate let-item="item">
+	<div class="kt-widget4__item">
+		<div class="row">
+			<div class="col-xl-12">
+				<div class="kt-widget4__info" *ngIf="item.desc">
+					<span class="kt-widget4__username">{{item.username}}</span>
+					<div class="row">
+						<p class="kt-widget4__text col-sm-8" *ngIf="item.desc">#Lecturas</p>
+						<p class="kt-widget4__text col-sm-4 text-right" style="padding-right: 0px;">1784</p>
+					</div>
+					<div class="row">
+						<p class="kt-widget4__text col-sm-8" *ngIf="item.desc">#Kilos Cosechados</p>
+						<p class="kt-widget4__text col-sm-4 text-right" style="padding-right: 0px;">23564.56</p>
+					</div>
+					<div class="row">
+						<p class="kt-widget4__text col-sm-8" *ngIf="item.desc">#Cosechadores</p>	
+						<p class="kt-widget4__text col-sm-4 text-right" style="padding-right: 0px;">256</p>
+					</div>
+					<div class="row">
+						<p class="kt-widget4__text col-sm-8" *ngIf="item.desc">#Grupos</p>
+						<p class="kt-widget4__text col-sm-4 text-right" style="padding-right: 0px;">7</p>
+					</div>
+					<p class="kt-widget4__text">Productividad</p>
+				</div>
+				<div class="kt-widget5__stats text-right">
+					<ng-container [ngTemplateOutlet]="actionTemplate" [ngTemplateOutletContext]="{item: item}"></ng-container>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+</ng-template>

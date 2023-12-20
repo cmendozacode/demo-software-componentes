@@ -1,0 +1,565 @@
+
+
+.cssReadOnly
+{   
+    pointer-events: none;
+}
+
+.cssformbase 
+{
+    overflow: 0 auto;
+}
+
+
+.tableHeaderClass
+{
+  overflow: 0 auto;
+  width: 100%;
+  display: inline-block;
+}
+
+
+
+.tableHeaderClass_left
+{
+  width: 50%;
+  display: inline-flex;
+  margin-bottom: 5px;
+}
+
+.tableHeaderClass_right  
+{
+  width: 50%;
+  text-align: end;
+  display: inline-block;
+  margin-bottom: 5px;
+}
+
+.tableHeaderClass_showhide
+{
+  padding: 3px;
+  display: inline-flex;
+  float: left;
+}
+
+.tableHeaderClass_showhide button
+{
+  width: 20px;
+  height: 20px;
+  background-image:url("../../../../../../assets/img/chevron-down-circle.svg"); 
+  border:none;
+  background-color: transparent;
+  margin: 3px;
+}
+
+
+.tableHeaderClass_right > div 
+{
+  width: 60%;
+  display: inline-flex;
+ 
+}
+
+
+.tableHeaderClass_right  > div > input
+{ 
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.tableHeaderClass_right > div > button
+{ 
+  padding-right: 8px;
+  padding-left: 8px;
+  border: 1px solid #ccc;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  box-sizing: border-box;
+}
+
+     
+
+
+.tableViewFields
+{
+  width: 100%;
+  display: block;
+}
+
+.tableViewFields_hide
+{
+  width: 100%;
+  display: none;
+}
+
+.tableViewFields_selection
+{
+  display: inline-block;
+  overflow: 0 auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin:3px;
+}
+
+.tableViewFields_selection label
+{  padding: 3px; }
+
+.tableViewFields_selection input
+{  margin: 3px;  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.csstablebase {
+    width: 100%;
+    display:block;
+    border-collapse: collapse;  
+    border-radius: 5px;
+    border: 1px solid #ddd;  
+    overflow: hidden;
+}
+
+.csstablebase  {
+
+    width: 100%;
+    height: 20px;
+    overflow: hidden;
+}
+
+
+.csstablebase {
+  height: 100%;
+}
+
+
+.csstablebase > tr {
+  color: white;
+  width: 100%;
+}
+
+.csstablebase > tr:first-child{
+  background-color: #4476c0;
+  border-color: #4476c0;
+}
+.csstablebase > tr:first-child:hover { background-color: #4476c0; }
+
+.csstablebase > tr > th 
+{
+  text-align: left;
+  border: 0px solid #ddd;   
+  padding: 1px;
+  line-height: 25px;
+  padding-top: 6px; 
+  padding-bottom: 6px; 
+  padding-left:6px;
+}
+
+
+
+.csstablebase > tr:nth-child(even){background-color: #f2f2f2;}
+.csstablebase > tr:hover {background-color: #ddd;}
+
+.csstablebase > tr 
+{ width: 100%;     
+}
+
+.csstablebase > tr > td
+{ 
+  text-align: left;
+  border: 1px solid #ddd;    
+  padding: 1px; 
+  line-height: 25px;
+  color: black;
+  padding-left:6px;
+}
+
+.csstablebasetd
+{
+  width: 100px;
+}
+ 
+
+
+.menutbldropdown
+{
+  position: relative;
+  display: contents;
+}
+
+.menutbldropdown_button
+{
+  color: white;
+  padding: 5px;
+
+  width: 24px;
+  height: 24px;
+  background-image:url("../../../../../../assets/img/menu.svg"); 
+  border:none;
+}
+
+.menutbldropdown_content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index:1;
+  margin-top: -0.6%;
+}
+
+.menutbldropdown_content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.menutbldropdown_content a:hover {background-color: #ddd;}
+
+.menutbldropdown:hover .menutbldropdown_content{display: block; }
+ 
+.menutbldropdown:hover .menutbldropdown_button {background-color: #707270;}
+
+
+.menutb_button_select{ background-image:url("../../../../../../assets/img/play-square.svg");  }
+.menutb_button_edit{ background-image:url("../../../../../../assets/img/edit-1.svg"); }
+.menutb_button_delete{ background-image:url("../../../../../../assets/img/bucket.svg"); }
+.menutb_button_save{ background-image:url("../../../../../../assets/img/save.svg"); }
+ 
+.menutb_button_select, .menutb_button_edit, .menutb_button_delete, .menutb_button_save{   
+  background-repeat: no-repeat;
+  background-size: 24px 24px;
+  background-position-y: center;
+  background-position-x:5px;
+}
+
+
+
+
+
+.csstablebase_table_nav {
+  display: flex;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.csstablebase_table_nav button {
+  margin-left: 8px;
+  margin-right: 8px;
+  background-color: transparent;
+}
+
+.csstablebase_button_right
+{ 
+  width: 24px;
+  height: 24px;
+  background-image:url("../../../../../../assets/img/arrow-right-square.svg"); 
+  border:none;
+}
+
+.csstablebase_button_left
+{ 
+  width: 24px;
+  height: 24px;
+  background-image:url("../../../../../../assets/img/arrow-left-square.svg"); 
+  border:none;
+}
+
+.csstablebase_button_page
+{ width: 24px;
+  height: 24px;
+  border:none;
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+
+.csstablebase_button_page_selected
+{ width: 20px;
+  height: 24px;
+  border:none;
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+  background-color: gray !important;
+  border-radius: 5px;
+}
+
+
+
+
+.csssearchtableinputtxt {
+  width: 50%; 
+}
+
+.csssearchtableinputtxt_button
+{ 
+width: 24px;
+height: 24px;
+background-image:url("../../../../../../assets/img/search-2.svg"); 
+float: left;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+.csstablebase .cssinputsearchform  
+{ 
+   display: inline-flex;
+}
+
+.csstablebase .cssinputsearchform > input 
+{ 
+    border: 1px solid #ccc;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    box-sizing: border-box;
+}
+ 
+.csstablebase .cssinputsearchform > label,.csstablebase .cssinputsearchform > input,.csstablebase .cssinputsearchform > button{
+    padding: 4px;
+    margin: 1px 0;
+    display: inline-block;
+}
+ 
+.csstablebase .cssinputsearchform > button
+{   padding-right: 10px;
+    padding-left: 10px;
+    border: 1px solid #ccc;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    box-sizing: border-box;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.csssearchbaseinput 
+{
+    overflow: 0 auto;
+    float: left;
+    width: 100%;
+    display: flex;
+    padding-bottom: 8px;
+}
+
+.csssearchbaseinput label, .csssearchbaseinput input  {
+    margin-right: 8px;
+}
+
+.csssearchbaseinput label
+{width: 15%;}
+.csssearchbaseinput input
+{  width: 55%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.csssearchbaseinput button
+{   width: 25%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+
+
+.csssearchbaseinputtxt {
+    width: 50%; 
+}
+
+.csssearchbaseinputtxt_button
+{ 
+  width: 24px;
+  height: 24px;
+  background-image:url("../../../../../../assets/img/search-2.svg"); 
+  float: left;
+
+}
+
+
+.csssearchbase_table_nav {
+    display: flex;
+    width: 100%;
+}
+
+.csssearchbase_table_nav button{
+    margin-left: 8px;
+    margin-right: 8px;
+    background-color: transparent;
+}
+
+.csssearchbase_data_selected {
+    display: flex;
+    width: 100%;
+    padding-bottom: 8px;
+}
+
+
+.csssearchbase_data_selected label, .csssearchbase_data_selected input {
+    margin-right: 8px;
+}
+
+
+
+.csssearchbase_response{
+    display: flex;
+    width: 100%;
+}
+
+.csssearchbase_response button{
+    margin-left: 8px;
+    margin-right: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+
+
+
+.csstablesearchbase {
+    width: 100%;
+    display:block;
+    border-collapse: collapse;  
+    border-radius: 5px;
+    border: 1px solid #ddd;  
+    background-color: ghostwhite;
+}
+
+.csstablesearchbase  {
+    display: inline-block;
+    width: 100%;
+    height: 20vh;
+    overflow: hidden;
+}
+ 
+
+.csstablesearchbase > tr {
+  color: white;
+  width: 100%;
+}
+
+.csstablesearchbase > tr:first-child{
+  background-color: #4476c0;
+  border-color: #4476c0;
+}
+.csstablesearchbase > tr:first-child:hover { background-color: #4476c0;}
+
+.csstablesearchbase > tr > th 
+{
+  text-align: left;
+  border: 0px solid #ddd;   
+  padding: 1px;
+  line-height: 25px;
+  padding-top: 5px; 
+  padding-bottom: 5px; 
+  padding-left:6px;
+ 
+}
+
+
+.csstablesearchbase > tr:nth-child(even){background-color: #f2f2f2;}
+.csstablesearchbase > tr:hover {background-color: #ddd;}
+
+.csstablesearchbase > tr 
+{ width: 100%;     
+}
+
+.csstablesearchbase > tr > td
+{ 
+  text-align: left;
+  border: 1px solid #ddd;    
+  padding: 1px; 
+  line-height: 25px;
+  color: black;
+  padding-left:6px;
+}
+
+.csstablesearchbase > tr > td > button
+{ 
+  width: 24px;
+  height: 24px;
+  background-image:url("../../../../../../assets/img/play-square.svg"); 
+  background-color: transparent;
+  border:none;
+}
+
+.csstablesearchtdbtn_select
+{
+  width: 5%;
+  padding-left:10px !important;
+  padding-right:10px !important;
+}
+ 
+.csstablesearchbase_button_right
+{ 
+  width: 24px;
+  height: 24px;
+  background-image:url("../../../../../../assets/img/arrow-right-square.svg"); 
+  border:none;
+}
+
+.csstablesearchbase_button_left
+{ 
+  width: 24px;
+  height: 24px;
+  background-image:url("../../../../../../assets/img/arrow-left-square.svg"); 
+  border:none;
+}

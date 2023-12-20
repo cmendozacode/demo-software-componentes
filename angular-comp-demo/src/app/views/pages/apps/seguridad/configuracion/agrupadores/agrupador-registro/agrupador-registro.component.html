@@ -1,0 +1,110 @@
+<div class="kt-portlet" [ngClass]="{ 'kt-portlet--body-progress kt-portlet--body-progress-overlay' : viewLoading }">
+	<kt-portlet-header [title]="getTitle()" [class]="'kt-portlet__head--lg'">
+		<ng-container ktPortletTools>
+			<a [routerLink]="['../agrupadores']" class="btn btn-secondary kt-margin-r-10" mat-raised-button matTooltip="Regresar a la lista">
+				<i class="la la-arrow-left"></i>
+				<span class="kt-hidden-mobile">Cancelar</span>
+			</a>
+            <button *ngIf="this.registro.status" type="button" mat-raised-button color="primary" (click)="guardarRegistro()" [disabled]="viewLoading || registroForm.invalid || !currentUsuario" matTooltip="Guardar">
+                Grabar ({{selectionResult.selected.length}} Items)
+            </button>
+		</ng-container>
+    </kt-portlet-header>
+    <kt-portlet-body [class]="'kt-portlet__body--fit'">
+        <form class="kt-form" [formGroup]="registroForm">
+            <div class="kt-portlet__body">
+                <div class="kt-portlet__body-progress">
+                    <mat-spinner [diameter]="20"></mat-spinner>
+                </div>
+                <kt-alert *ngIf="hasFormErrors" type="{{typeAlert}}" [duration]="30000" [showCloseButton]="true" (close)="onAlertClose($event)">
+                    {{messageAlert}}
+                </kt-alert>
+                <div class="form-group kt-form__group row">
+                    <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput placeholder="Nombre Agrupador" formControlName="configuracionNombre" upperCase/>
+                            <mat-error *ngFor="let val of validations.configuracionNombre"><strong>{{val.message}}</strong></mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-2 kt-margin-bottom-20-mobile">
+                        <mat-form-field class="mat-form-field-fluid">
+                            <input matInput placeholder="Cultivo" formControlName="cultivoNombre" upperCase/>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-3 kt-margin-bottom-20-mobile" >
+                        <mat-form-field class="mat-form-field-fluid">
+                            <mat-select placeholder="Tipo Configuracion" formControlName="tipoConfiguracionId">
+                                <mat-option value="0">--Seleccione--</mat-option>
+                                <mat-option *ngFor="let item of listadoCboTipoConfig" [value]="item.codigo">{{item.descripcion}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngFor="let val of validations.tipoConfiguracionId"><strong>{{val.message}}</strong></mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-lg-2 kt-margin-bottom-20-mobile padTop10">
+                        <mat-checkbox [color]="'primary'" formControlName="status">Activo</mat-checkbox>
+                    </div>
+                </div>
+                <mat-tab-group class="demo-tab-group">
+                    <mat-tab label="Relación de items disponibles ({{dataSourceResult.length}})">
+                        <div class="demo-tab-content">
+                            <div class="form-group kt-form__group row" *ngIf="dataSourceResult.length>0" 
+                                style="padding-top: 0px;padding-bottom: 0px;">
+                                <div class="col-lg-4 kt-margin-bottom-20-mobile">
+                                    <mat-form-field class="mat-form-field-fluid">
+                                        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtrado rápido">
+                                    </mat-form-field> 
+                                </div>
+                            </div>
+                            <div class="mat-table__wrapper">
+                                <mat-table class="lmat-elevation-z8"
+                                    matSort
+                                    #sort1="matSort" 
+                                    [dataSource]="dataSource">
+                                    <ng-container matColumnDef="select">
+                                        <mat-header-cell *matHeaderCellDef class=" mat-column mat-column-checkbox">
+                                            <mat-checkbox (change)="$event ? masterToggle() : null"
+                                                [checked]="(selectionResult.hasValue() && isAllSelectedRegistros()) || (selectionResult.hasValue() && isAllFilterSelectedRegistros())"
+                                                [indeterminate]="(selectionResult.hasValue() && !isAllSelectedRegistros())||(selectionResult.hasValue() && !isAllFilterSelectedRegistros())"
+                                                [disabled]="!registro.status"
+                                                [color]="'primary'">
+                                            </mat-checkbox>
+                                        </mat-header-cell>
+                                        <mat-cell *matCellDef="let row" class="mat-column mat-column-checkbox">
+                                            <mat-checkbox (click)="$event.stopPropagation()"
+                                                (change)="$event ? selectionResult.toggle(row) : null"
+                                                [checked]="selectionResult.isSelected(row)"
+                                                [disabled]="!registro.status"
+                                                [color]="'primary'">
+                                            </mat-checkbox>
+                                        </mat-cell>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="itemCodigo">
+                                        <mat-header-cell *matHeaderCellDef class="mat-column center-cell mat-column-200">CODIGO</mat-header-cell>
+                                        <mat-cell *matCellDef="let rowItem" class="mat-column center-cell mat-column-200">{{rowItem.itemCodigo}}</mat-cell>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="itemNombre">
+                                        <mat-header-cell *matHeaderCellDef class="mat-column center-cell ">NOMBRE</mat-header-cell>
+                                        <mat-cell *matCellDef="let rowItem" class="mat-column ">{{rowItem.itemNombre}}</mat-cell>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="itemDescripcion">
+                                        <mat-header-cell *matHeaderCellDef class="mat-column center-cell">DESCRIPCION</mat-header-cell>
+                                        <mat-cell *matCellDef="let rowItem" class="mat-column">{{rowItem.itemDescripcion}}</mat-cell>
+                                    </ng-container>
+
+                                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                                </mat-table>
+                            </div>
+                            <div class="mat-table__bottom">
+                                <mat-paginator #matPaginator [pageSizeOptions]="pageSizeOptions"></mat-paginator>
+                            </div>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+        </form>
+    </kt-portlet-body>
+</div>

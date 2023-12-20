@@ -1,0 +1,60 @@
+export class ConductorModel {
+	conductorID: number;
+	tipoServicioID: number;
+	tipoServicioNombre: string;
+	tipoDocID?: number;
+	tipoDocNombre?: string;
+	conductorDocumento?: string;
+	conductorNombres?: string;
+	conductorApellidoPaterno?: string;
+	conductorApellidoMaterno?: string;
+	conductorFechaNacimiento?: string;
+	conductorDireccion?: string;
+	conductorLicenciaConducir?: string;
+	conductorTelefono?: string;
+	login?: string;
+	proveedorID?: number;
+	proveedorNombre?: string;
+	conductorEdad?: number;
+	conductorLicenciaCategoria?: string;
+	conductorLicenciaRevalidacion?: string;
+	conductorNombreCompleto?: string;
+	usuarioLogin?: string;
+	usuarioPassword?: string;
+	licenciaCategoriaID?: number;
+	conductorFechaVecInducSigma?: string;
+	conductorFechaVecCapaTdp?: string;
+	conductorFechaAltaSunat?: string;
+	conductorFechaCapacitacion?: string;
+	condicionID: number;
+	condicionNombre: string;
+
+	clear() {
+		this.conductorID = 0;
+		this.tipoServicioID = 0;
+		this.tipoDocID = 0;
+		this.tipoDocNombre = "";
+		this.conductorDocumento = "";
+		this.conductorNombres = "";
+		this.conductorApellidoPaterno = "";
+		this.conductorApellidoMaterno = "";
+		this.conductorFechaNacimiento = "";
+		this.conductorDireccion = "";
+		this.conductorLicenciaConducir = "";
+		this.conductorTelefono = "";
+		this.login = "";
+		this.proveedorID = 0;
+		this.conductorEdad = null;
+		this.conductorLicenciaCategoria = "";
+		this.conductorLicenciaRevalidacion = "";
+		this.conductorNombreCompleto = "";
+		this.usuarioLogin = "";
+		this.usuarioPassword = "";
+		this.licenciaCategoriaID = 0;
+		this.conductorFechaVecInducSigma = "";
+		this.conductorFechaVecCapaTdp = "";
+		this.conductorFechaAltaSunat = "";
+		this.conductorFechaCapacitacion = "";
+		this.condicionID = 0;
+	}
+}

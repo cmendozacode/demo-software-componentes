@@ -1,0 +1,25 @@
+<!-- begin:: Header Topbar -->
+<div class="kt-header__topbar">
+	<!--begin: Quick DEMOWEB Access -->
+	<div class="kt-header__topbar-item kt-header__topbar-item--quick-panel" data-placement="bottom" ngbTooltip="Acceso DEMOWEB">
+		<span class="kt-header__topbar-icon"  (click)="fn_goToDEMOWEB()" >
+			<span class="kt-svg-icon" [inlineSVG]="'./assets/media/icons/svg/Home/Earth.svg'"></span>
+		</span>
+	</div>
+	<!--end: Quick DEMOWEB Access -->
+
+	<!--begin: Quick panel toggler -->
+	<div class="kt-header__topbar-item kt-header__topbar-item--quick-panel" data-placement="bottom" ngbTooltip="Cambiar Cultivo">
+		<span class="kt-header__topbar-icon" id="kt_quick_panel_toggler_btn">
+			<span class="kt-svg-icon" [inlineSVG]="'./assets/media/icons/svg/Home/bayas.svg'"></span>
+		</span>
+	</div>
+	<!--end: Quick panel toggler -->
+	<!--begin: Language bar -->
+	<kt-language-selector></kt-language-selector>
+	<!--end: Language bar -->
+	<!--begin: User bar -->
+	<kt-user-profile></kt-user-profile>
+	<!--end: User bar -->
+</div>
+<!-- end:: Header Topbar -->

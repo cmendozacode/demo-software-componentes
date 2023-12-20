@@ -1,0 +1,143 @@
+<div   *ngIf="jsonLanguageTags != null || jsonLanguageTags != undefined" >   
+
+    <div [ngClass]="fn_ngClassEval()">
+
+        <div class="tableHeaderClass">
+            <div class="tableHeaderClass_left">              
+               <div class="tableHeaderClass_showhide">
+                  <h6>{{jsonLanguageTags[tableTitle]}}</h6>
+                  <button type="button" (click)="fn_getheadershowhide()" ></button>
+               </div> 
+            </div>
+            <div  class="tableHeaderClass_right">
+               <div> 
+                 <input  type="text"  [(ngModel)]="inputTxtSearch" class="csssearchtableinputtxt"  >
+                 <button type="button" (click)="fn_searchTableButton()">
+                    <div class="csssearchtableinputtxt_button"></div>                
+                 </button>
+               </div> 
+            </div>
+        </div>
+        <div class="tableViewFields"  *ngIf="tableDataHeaderShow == true" >
+            <div class="tableViewFields_selection"  *ngFor="let itemColumn of jsonHtmlTableStructure; let i = index" >            
+                <label >{{jsonLanguageTags[itemColumn.propertyTextLabel]}}</label> 
+                <input type="checkbox"  [(ngModel)]="itemColumn.visible"  >                  
+            </div>
+        </div>
+
+        <table [ngClass]="tableClass"  [style.height]="tableHeightPage">
+            
+            <tr>
+                <th *ngFor="let itemColumn of fn_gettablestructure(); let i = index" [style.width] = "itemColumn.fieldWidth" >
+                    {{jsonLanguageTags[itemColumn.propertyTextLabel]}}
+                </th>
+            </tr>
+            <tr *ngFor="let itemRow of fn_tableDataPagination(); let j = index" >
+                <td *ngFor="let itemColumn of fn_gettablestructure(); let i = index" >
+                  <div *ngIf="itemColumn.controlType == 'label'" >
+
+                      <div *ngIf="itemColumn.controlSubType == 'text'" >{{itemRow[itemColumn.propertyName]}}</div>
+                      <div *ngIf="itemColumn.controlSubType == 'number'" >{{itemRow[itemColumn.propertyName]}}</div>
+                      <div *ngIf="itemColumn.controlSubType == 'date'" >{{ itemRow[itemColumn.propertyName] == null || itemRow[itemColumn.propertyName] == undefined ? "" : (itemRow[itemColumn.propertyName]).substring(0, 10) }}</div>
+                      <div *ngIf="itemColumn.controlSubType == 'datetime'" >{{ itemRow[itemColumn.propertyName] == null || itemRow[itemColumn.propertyName] == undefined ? "" : (itemRow[itemColumn.propertyName]).substring(0, 10) + " " + (itemRow[itemColumn.propertyName]).substring(11, 16) }} </div>
+                      <div *ngIf="itemColumn.controlSubType == 'time'" >{{ itemRow[itemColumn.propertyName] == null || itemRow[itemColumn.propertyName] == undefined ? "" : (itemRow[itemColumn.propertyName]).substring(0, 5) }} </div>
+                      <div *ngIf="itemColumn.controlSubType == 'boolean'" >{{ itemRow[itemColumn.propertyName] == true ? jsonLanguageTags[itemColumn.controlTrueValue] : jsonLanguageTags[itemColumn.controlFalseValue]   }} </div>
+                      <div *ngIf="itemColumn.controlSubType == 'object'" >{{ itemRow[itemColumn.propertyName] == null || itemRow[itemColumn.propertyName] == undefined  || itemRow[itemColumn.propertyName][itemColumn.controlObjectValue] == undefined ? "" : itemRow[itemColumn.propertyName][itemColumn.controlObjectValue] }}</div>
+                  </div>
+
+                  <div *ngIf="itemColumn.controlType == 'input'" >
+                    <div *ngIf="itemColumn.controlSubType == 'text'" >
+                        <input name={{itemColumn.fieldFormName}} type="text"  [(ngModel)]="itemRow[itemColumn.propertyName]" maxlength={{itemColumn.maxlength}} 
+                        [style.width]="itemColumn.fieldWidth" (change)="fn_OnChangeInputText(itemColumn,itemRow)" [readonly]="itemColumn.readonly"
+                        [ngClass]="fn_FormFieldValidation(itemColumn,itemRow)"
+                        >
+                    </div>
+
+                    <div *ngIf="itemColumn.controlSubType == 'number'" >
+                        <input name={{itemColumn.fieldFormName}} type="number"  [(ngModel)]="itemRow[itemColumn.propertyName]" maxlength={{itemColumn.maxlength}} 
+                        [style.width]="itemColumn.fieldWidth" (change)="fn_OnChangeInputNumber(itemColumn,itemRow)" [readonly]="itemColumn.readonly"
+                        [ngClass]="fn_FormFieldValidation(itemColumn,itemRow)"
+                        >
+                    </div>
+
+                    <div *ngIf="itemColumn.controlSubType == 'checkbox'" >
+                        <input [name]="itemColumn.fieldFormName+''+i" type="checkbox"  [(ngModel)]="itemRow[itemColumn.propertyName]" 
+                        [style.width]="itemColumn.fieldWidth" (change)="fn_OnChangeInputCheckbox(itemColumn,itemRow)" [readonly]="itemColumn.readonly" 
+                        [ngClass]="fn_FormFieldValidation(itemColumn,itemRow)"
+                        >
+                    </div>
+
+                    <div *ngIf="itemColumn.controlSubType == 'date'">
+                        <input name={{itemColumn.fieldFormName}} type="date"  [(ngModel)]="itemRow[itemColumn.propertyName]" 
+                        [style.width]="itemColumn.fieldWidth" (change)="fn_OnChangeInputDate(itemColumn,itemRow)" [readonly]="itemColumn.readonly" 
+                        [ngClass]="fn_FormFieldValidation(itemColumn,itemRow)"
+                        >
+                    </div>
+ 
+
+                  </div>
+
+                  <div *ngIf="itemColumn.controlType == 'datalist'" >
+                      <div>
+                                    
+                        <input [id]="itemColumn.fieldFormName+''+j" [name]="itemColumn.fieldFormName+''+j" [attr.list]="itemColumn.fieldFormListName+''+j"  [(ngModel)]="itemRow[itemColumn.propertyName+'_currentvalue']" 
+                        [style.width]="itemColumn.fieldWidth"  (change)="fn_OnChangeInputDataList(itemColumn,itemRow)" [readonly]="itemColumn.readonly" 
+                        [ngClass]="fn_FormFieldValidation(itemColumn,itemRow)"
+                        >
+                         
+                        <datalist [id]="itemColumn.fieldFormListName+''+j" >
+                            <option *ngFor="let itemDataList of fn_DataListFilter(itemColumn , itemColumn.collectionData ,itemRow); let ji = index" value="{{itemDataList[itemColumn.propertyDataListItemName]}}" ></option>
+                        </datalist>
+              
+                      </div>
+
+                  </div>
+
+
+                  <div *ngIf="itemColumn.controlType == 'searchinput'" >
+
+                    <div class="{{itemColumn.controlClass}}" [style.width]="itemColumn.fieldWidth" >
+                                  
+                      <input [id]="itemColumn.fieldFormName+''+j" [name]="itemColumn.fieldFormName+''+j"   [(ngModel)]="itemRow[itemColumn.propertyName+'_currentvalue']" 
+                       (change)="fn_OnChangeSearchInputText(itemColumn,itemRow)" [readonly]="itemColumn.readonly" 
+                      [ngClass]="fn_FormFieldValidation(itemColumn,itemRow)" style="width:90%"
+                      >
+                      <button  type="button" (click)="fn_OpenSearchInput(itemColumn,itemRow,j)" >
+                        <i class="la la-search"></i>
+                        <span></span>
+                      </button>
+                                
+                    </div>
+
+                </div>                  
+
+
+                  <div *ngIf="itemColumn.controlType == 'menu'" style="text-align: center;" >
+                      <div class="menutbldropdown">
+                         <button class="menutbldropdown_button"></button>
+                         <div class="menutbldropdown_content">                          
+                            <a *ngIf="itemColumn.controlMenuView == true"  class="menutb_button_select" (click)="fn_OnEventTableMenu(itemRow,'select',j)"><span></span> {{jsonLanguageTags['txt_tbl_menu_select']}}</a>                          
+                            <a *ngIf="itemColumn.controlMenuEdit == true" class="menutb_button_edit" (click)="fn_OnEventTableMenu(itemRow,'update',j)"><span></span> {{jsonLanguageTags['txt_tbl_menu_update']}}</a>
+                            <a *ngIf="itemColumn.controlMenuSave == true" class="menutb_button_save" (click)="fn_OnEventTableMenu(itemRow,'save',j)"><span></span> {{jsonLanguageTags['txt_tbl_menu_save']}}</a>
+                            <a *ngIf="itemColumn.controlMenuDelete == true" class="menutb_button_delete" (click)="fn_OnEventTableMenu(itemRow,'delete',j)"><span></span> {{jsonLanguageTags['txt_tbl_menu_delete']}}</a>
+                         </div>
+                      </div>
+                  </div>
+
+                  
+                </td>
+            </tr>
+
+        </table>
+
+
+    </div>
+
+    <div class="csstablebase_table_nav">
+        <button (click)="fn_tableDataPagSubstrct()" class="csstablebase_button_left" ></button>
+           <span>Pag. &nbsp;&nbsp;</span>
+           <button *ngFor="let itemI of tableDataPages; let i = index" [ngClass]="fn_tableGetCurPageClass(i)" (click)="fn_tableDataPagChange(i)" >{{itemI+1}}</button>
+        <button (click)="fn_tableDataPagAdd()" class="csstablebase_button_right" ></button>
+    </div>
+
+</div>

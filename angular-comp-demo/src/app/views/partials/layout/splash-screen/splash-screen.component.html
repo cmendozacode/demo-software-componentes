@@ -1,0 +1,5 @@
+<!-- splash screen -->
+<div #splashScreen class="kt-splash-screen">
+	<img *ngIf="loaderType === 'spinner-logo'" [attr.src]="loaderLogo" alt="Logo">
+	<mat-spinner diameter="40"></mat-spinner>
+</div>

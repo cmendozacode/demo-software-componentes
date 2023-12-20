@@ -1,0 +1,165 @@
+<kt-portlet>
+	<kt-portlet-header [class]="'kt-portlet__head--lg'" >
+		<ng-container ktPortletTitle>
+			<h3 class="kt-portlet__head-title">
+				<span translate="SEGURIDAD.USUARIO.LIST">*</span>
+			</h3>
+        </ng-container>
+		<ng-container ktPortletTools>
+			<button *ngIf="selection.selected.length > 0" type="button" mat-raised-button (click)="eliminarRegistrosSeleccionados()" matTooltip="Eliminar registros seleccionados">
+				<mat-icon>delete</mat-icon> &nbsp;
+				<span class="kt-hidden-mobile">Eliminar seleccionados ({{selection.selected.length}})</span>
+			</button>&nbsp;
+			<button [routerLink]="['../usuario-reg']" mat-raised-button matTooltip="Crear nuevo usuario" color="primary" type="button">
+				<span translate="SEGURIDAD.USUARIO.NEW">*</span>
+			</button>
+		</ng-container>
+	</kt-portlet-header>
+
+    <kt-portlet-body [class]="'kt-portlet__body--fit'">
+		<kt-portlet-header [hidden]="listadoResult.length<=0" [class]="'kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm'">
+			<ng-container ktPortletTools >
+				<div class="kt-portlet__head-toolbar" [hidden]="loading">
+					<div class="kt-margin-r-10">
+						<input matInput [(ngModel)]="filtroUsuarios" (keyup)="applyFilter($event.target.value)" placeholder="Filtrado rápido">
+					</div>
+					<button mat-button [matMenuTriggerFor]="menuExport">
+						<span>Exportar</span>
+					</button>
+					<mat-menu #menuExport="matMenu">
+						<button mat-menu-item (click)="exporterRep.exportTable('xlsx', {fileName:'Usuarios DEMOWEB', sheet: 'usuarios_DEMOWEB', Props: {Author: 'Yapu'}})">
+							<mat-icon>cloud_download</mat-icon>
+							<span>Excel</span>
+						</button>
+						<button mat-menu-item (click)="exporterRep.exportTable('csv', {fileName:'Usuarios DEMOWEB'})">
+							<mat-icon>cloud_download</mat-icon>
+							<span>CSV</span>
+						</button>
+						<button mat-menu-item (click)="exporterRep.exportTable('txt', {fileName:'Usuarios DEMOWEB'})">
+							<mat-icon>cloud_download</mat-icon>
+							<span>TXT</span>
+						</button>
+					</mat-menu>
+				</div>
+			</ng-container>
+		</kt-portlet-header>
+        <div class="mat-table__wrapper">
+            <mat-table class="lmat-elevation-z8"
+				matSort
+				#sort1="matSort"
+				[dataSource]="dataSource"
+				matTableExporter
+                #exporterRep= "matTableExporter"
+				matSortDisableClear>
+				
+				<ng-container matColumnDef="select">
+					<mat-header-cell *matHeaderCellDef class="mat-column-checkbox">
+						<mat-checkbox (change)="$event ? masterToggle() : null"
+                            [checked]="(selection.hasValue() && isAllSelectedRegistros()) || (selection.hasValue() && isAllFilterSelectedRegistros())"
+                            [indeterminate]="(selection.hasValue() && !isAllSelectedRegistros())||(selection.hasValue() && !isAllFilterSelectedRegistros())"
+                            [color]="'primary'">
+                        </mat-checkbox>
+					</mat-header-cell>
+					<mat-cell *matCellDef="let row" class="mat-column-checkbox">
+						<mat-checkbox (click)="$event.stopPropagation()"
+							(change)="$event ? selection.toggle(row) : null"
+							[checked]="selection.isSelected(row)"
+							[color]="'primary'">
+						</mat-checkbox>
+					</mat-cell>
+				</ng-container>
+
+				<ng-container matColumnDef="nro">
+					<!-- <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell> -->
+                    <mat-header-cell *matHeaderCellDef class="mat-column center-cell mat-column-num">#</mat-header-cell>
+                    <mat-cell *matCellDef="let rowItem" class="mat-column center-cell mat-column-num">{{rowItem.nro}}</mat-cell>
+				</ng-container>
+
+				<ng-container matColumnDef="empresaNombre">
+					<mat-header-cell *matHeaderCellDef mat-sort-header class="mat-column center-cell mat-column-140">EMPRESA</mat-header-cell>
+					<mat-cell *matCellDef="let rowItem" class="mat-column mat-column-140 center-cell">{{rowItem.empresaNombre}}</mat-cell>
+                </ng-container>
+
+				<ng-container matColumnDef="usuarioTipoNombre">
+					<mat-header-cell *matHeaderCellDef mat-sort-header class="mat-column center-cell mat-column-180">TIPO USUARIO</mat-header-cell>
+					<mat-cell *matCellDef="let rowItem" class="mat-column mat-column-180 center-cell">{{rowItem.usuarioTipoNombre}}</mat-cell>
+                </ng-container>
+
+				<ng-container matColumnDef="usuarioCodigo">
+					<mat-header-cell *matHeaderCellDef class="mat-column center-cell mat-column-100">DOCUMENTO</mat-header-cell>
+					<mat-cell *matCellDef="let rowItem" class="mat-column center-cell mat-column-100">{{rowItem.usuarioCodigo}}</mat-cell>
+				</ng-container>
+
+				<ng-container matColumnDef="usuarioNombreCompleto">
+					<mat-header-cell *matHeaderCellDef mat-sort-header class="mat-column center-cell">NOMBRES</mat-header-cell>
+					<mat-cell *matCellDef="let rowItem" class="mat-column">{{rowItem.usuarioNombreCompleto}}</mat-cell>
+                </ng-container>
+
+				<ng-container matColumnDef="usuarioCorreo">
+					<mat-header-cell *matHeaderCellDef mat-sort-header class="mat-column center-cell">CORREO</mat-header-cell>
+					<mat-cell *matCellDef="let rowItem" class="mat-column">{{rowItem.usuarioCorreo}}</mat-cell>
+                </ng-container>
+
+				<ng-container matColumnDef="usuarioWeb">
+					<mat-header-cell *matHeaderCellDef mat-sorter-header class="mat-column center-cell mat-column-50">WEB</mat-header-cell>
+					<mat-cell *matCellDef="let rowItem" class="mat-column center-cell mat-column-50">
+						<span *ngIf="rowItem.usuarioWeb" class="kt-badge kt-badge--inline kt-badge--pill kt-badge--success kt-badge--wide">SI</span>
+						<span *ngIf="!rowItem.usuarioWeb" class="kt-badge kt-badge--inline kt-badge--pill kt-badge--danger kt-badge--wide">NO</span>
+					</mat-cell>
+				</ng-container>
+
+				<ng-container matColumnDef="usuarioMovil">
+					<mat-header-cell *matHeaderCellDef mat-sorter-header class="mat-column center-cell mat-column-50">MOVIL</mat-header-cell>
+					<mat-cell *matCellDef="let rowItem" class="mat-column center-cell mat-column-50">
+						<span *ngIf="!rowItem.usuarioMovil" class="kt-badge kt-badge--inline kt-badge--pill kt-badge--danger kt-badge--wide">NO</span>
+						<span *ngIf="rowItem.usuarioMovil" class="kt-badge kt-badge--inline kt-badge--pill kt-badge--success kt-badge--wide">SI</span>
+					</mat-cell>
+				</ng-container>
+
+				<ng-container matColumnDef="usuarioStatus">
+					<mat-header-cell *matHeaderCellDef mat-sorter-header class="mat-column center-cell mat-column-100">ESTADO</mat-header-cell>
+					<mat-cell *matCellDef="let rowItem" class="mat-column center-cell mat-column-100">
+						<span *ngIf="rowItem.usuarioStatus" class="kt-badge kt-badge--inline kt-badge--pill kt-badge--success kt-badge--wide">ACTIVO</span>
+						<span *ngIf="!rowItem.usuarioStatus" class="kt-badge kt-badge--inline kt-badge--pill kt-badge--danger kt-badge--wide">INACTIVO</span>
+					</mat-cell>
+				</ng-container>
+                
+				<ng-container matColumnDef="actions">
+					<mat-header-cell *matHeaderCellDef class="mat-column center-cell">...</mat-header-cell>
+					<mat-cell *matCellDef="let rowItem">
+
+                        <button mat-icon-button 
+                            color="accent" matTooltip="Ver detalle" (click)="editarRegistro(rowItem, true)">
+                            <mat-icon>visibility</mat-icon>
+                        </button>
+						
+                        <button mat-icon-button 
+                            color="primary" matTooltip="Editar registro" (click)="editarRegistro(rowItem)">
+							<mat-icon>create</mat-icon>
+						</button>&nbsp;
+				
+						<button mat-icon-button
+							color="warn"
+							matTooltip="Eliminar registro"
+							type="button"
+							(click)="eliminarRegistro(rowItem)">
+							<mat-icon>delete</mat-icon>
+						</button>&nbsp;
+				
+					</mat-cell>
+				</ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+            </mat-table>
+        </div>
+        <div class="mat-table__bottom">
+            <mat-spinner [diameter]="20" *ngIf="loading"></mat-spinner>
+            <mat-paginator [pageSizeOptions]="pageSizeOptions"></mat-paginator>
+        </div>
+        <kt-alert *ngIf="hasFormErrors" type="{{typeAlert}}" [duration]="30000" [showCloseButton]="true" (close)="onAlertClose($event)">
+            {{messageAlert}}
+        </kt-alert> 
+    </kt-portlet-body>
+</kt-portlet>

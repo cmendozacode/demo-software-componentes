@@ -1,0 +1,46 @@
+<div class="kt-grid kt-grid--hor kt-grid--root kt-login kt-login--v1" id="kt_login">
+	<div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--desktop kt-grid--ver-desktop kt-grid--hor-tablet-and-mobile">
+		<!--begin::Aside-->
+		<div class="kt-grid__item kt-grid__item--order-tablet-and-mobile-2 kt-grid kt-grid--hor kt-login__aside" style="background-image: url(./assets/media/bg/bg-DEMOWEB1.jpg);">
+			<div class="kt-grid__item">
+				<a href="https://www.DEMOWEB.pe/" target="_blank" class="kt-login__logo">
+					<img src="./assets/media/logos/logo-h.png" alt="DEMOWEB" onerror="this.src='./assets/media/logos/logo-h.png'" width="190" height="41.84">
+				</a>
+			</div>
+			<div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--ver">
+				<div class="kt-grid__item kt-grid__item--middle">
+					<h3 class="kt-login__title kt-hidden-mobile">
+						<mat-icon>vpn_lock</mat-icon>
+						<mat-icon>insert_chart</mat-icon>
+						<mat-icon>devices</mat-icon>
+						<mat-icon>person_pin_circle</mat-icon>
+						<mat-icon>cloud_done</mat-icon>
+						<mat-icon>view_module</mat-icon>
+					</h3>
+					<h4 class="kt-login__subtitle">Plataforma digital para la gestión eficiente de operaciones agrícolas en campo.</h4>
+				</div>
+			</div>
+			<div class="kt-grid__item">
+				<div class="kt-login__info kt-hidden-mobile">
+					<div class="kt-login__copyright">
+						&copy;&nbsp;{{today|date:'yyyy'}}&nbsp;
+						<a href="https://www.yapu.pe/" target="_blank" class="kt-link">
+							Yapu Solutions
+						</a>
+					</div>
+					<div class="kt-login__menu">
+						<a href="https://www.DEMOWEB.pe/" target="_blank" class="kt-link" translate="AUTH.GENERAL.ABOUT">*</a>
+						<a href="https://www.yapu.pe/" target="_blank" class="kt-link" translate="AUTH.GENERAL.CONTACT">*</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--begin::Aside-->
+
+		<!--begin::Content-->
+		<div class="kt-grid__item kt-grid__item--fluid  kt-grid__item--order-tablet-and-mobile-1 kt-login__wrapper">
+			<router-outlet></router-outlet>
+		</div>
+		<!--end::Content-->
+	</div>
+</div>

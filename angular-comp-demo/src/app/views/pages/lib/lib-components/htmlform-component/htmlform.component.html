@@ -1,0 +1,254 @@
+<div   *ngIf="jsonLanguageTags != null || jsonLanguageTags != undefined" >   
+ 
+  <div [ngClass]="fn_ngClassEval()">
+
+    <div *ngFor="let groupControl of jsonHtmlFormStructure; let i = index" class="{{groupControl.controlClass}}">
+        
+     <div *ngFor="let itemControl of groupControl.groupConfig; let i = index" class="{{itemControl.controlClass}}" >
+
+        <!-- Control Input-->
+       <div *ngIf="itemControl.controlType == 'input'"  >
+          <div *ngIf="itemControl.controlSubType == 'text'" class="{{itemControl.controlClass}}">
+
+            <label *ngIf="itemControl.propertyTextLabel != null">{{jsonLanguageTags[itemControl.propertyTextLabel]}}{{itemControl.required == true ? ' *':''}}</label> 
+            <input name={{itemControl.fieldFormName}} type="text"  [(ngModel)]="currentObject[itemControl.propertyName]" maxlength={{itemControl.maxlength}} 
+            [style.width]="itemControl.fieldWidth" (change)="fn_OnChangeInputText(itemControl,currentObject)" [readonly]="itemControl.readonly"
+            [ngClass]="fn_FormFieldValidation(itemControl,currentObject)"
+            >
+              
+          </div>
+          <div *ngIf="itemControl.controlSubType == 'number'" class="{{itemControl.controlClass}}" >
+            
+            <label *ngIf="itemControl.propertyTextLabel != null">{{jsonLanguageTags[itemControl.propertyTextLabel]}}{{itemControl.required == true ? ' *':''}}</label> 
+            <input name={{itemControl.fieldFormName}} type="number"  [(ngModel)]="currentObject[itemControl.propertyName]" maxlength={{itemControl.maxlength}} 
+            [style.width]="itemControl.fieldWidth"  (change)="fn_OnChangeInputNumber(itemControl,currentObject)" [readonly]="itemControl.readonly" 
+            [ngClass]="fn_FormFieldValidation(itemControl,currentObject)"
+            >
+              
+          </div>          
+          <div *ngIf="itemControl.controlSubType == 'checkbox'" class="{{itemControl.controlClass}}" >
+            
+            <label *ngIf="itemControl.propertyTextLabel != null">{{jsonLanguageTags[itemControl.propertyTextLabel]}}{{itemControl.required == true ? ' *':''}}</label> 
+            <input name={{itemControl.fieldFormName}} type="checkbox"  [(ngModel)]="currentObject[itemControl.propertyName]" 
+            [style.width]="itemControl.fieldWidth" (change)="fn_OnChangeInputCheckbox(itemControl,currentObject)" [readonly]="itemControl.readonly" 
+            [ngClass]="fn_FormFieldValidation(itemControl,currentObject)"
+            >
+              
+          </div>    
+          <div *ngIf="itemControl.controlSubType == 'radiobutton'" class="{{itemControl.controlClass}}" >
+            
+            <label *ngIf="itemControl.propertyTextLabel != null">{{jsonLanguageTags[itemControl.propertyTextLabel]}}{{itemControl.required == true ? ' *':''}}</label> 
+            <input name={{itemControl.fieldFormName}} type="radio"  [(ngModel)]="currentObject[itemControl.propertyName]" 
+            [style.width]="itemControl.fieldWidth" (change)="fn_OnChangeInputRadioButton(itemControl,currentObject)" [readonly]="itemControl.readonly" 
+            [ngClass]="fn_FormFieldValidation(itemControl,currentObject)"
+            >
+              
+          </div>              
+          <div *ngIf="itemControl.controlSubType == 'date'" class="{{itemControl.controlClass}}" >
+            
+            <label *ngIf="itemControl.propertyTextLabel != null">{{jsonLanguageTags[itemControl.propertyTextLabel]}}{{itemControl.required == true ? ' *':''}}</label> 
+            <input name={{itemControl.fieldFormName}} type="date"  [(ngModel)]="currentObject[itemControl.propertyName]" 
+            [style.width]="itemControl.fieldWidth" (change)="fn_OnChangeInputDate(itemControl,currentObject)" [readonly]="itemControl.readonly" 
+            [ngClass]="fn_FormFieldValidation(itemControl,currentObject)"
+            >
+              
+          </div>
+
+
+          <div *ngIf="itemControl.controlSubType == 'file'" class="{{itemControl.controlClass}}">
+
+            <label *ngIf="itemControl.propertyTextLabel != null">{{jsonLanguageTags[itemControl.propertyTextLabel]}}{{itemControl.required == true ? ' *':''}}</label> 
+            <input name={{itemControl.fieldFormName}} type="file"  [(ngModel)]="currentObject[itemControl.propertyName+'_filevalue']" maxlength={{itemControl.maxlength}} 
+            [style.width]="itemControl.fieldWidth" (change)="fn_OnChangeInputFile(itemControl,currentObject, $event)" [readonly]="itemControl.readonly"
+            [ngClass]="fn_FormFieldValidation(itemControl,currentObject)"
+            >
+
+            <button type="button" (click)="fn_LoadInputFile(itemControl,currentObject)" >         
+              <div></div>
+              <span>{{jsonLanguageTags['txtupload']}}</span>       
+            
+            </button>
+              
+          </div>
+
+       </div>
+
+       <!-- Control Textarea-->
+       <div *ngIf="itemControl.controlType == 'textarea'"  >
+        <br>
+        <div class="{{itemControl.controlClass}}">
+         
+         <label *ngIf="itemControl.propertyTextLabel != null">{{jsonLanguageTags[itemControl.propertyTextLabel]}}{{itemControl.required == true ? ' *':''}}</label> 
+         <textarea name={{itemControl.fieldFormName}} type="text"  [(ngModel)]="currentObject[itemControl.propertyName]" maxlength={{itemControl.maxlength}} 
+         [style.width]="itemControl.fieldWidth" (change)="fn_OnChangeInputText(itemControl,currentObject)" [readonly]="itemControl.readonly" 
+         cols={{itemControl.controlTextAreaCols}} 
+         rows={{itemControl.controlTextAreaRows}} 
+         [ngClass]="fn_FormFieldValidation(itemControl,currentObject)"
+         >
+         </textarea> 
+        
+         </div>
+       </div>
+
+
+       <!-- Control DataList -->
+       <div *ngIf="itemControl.controlType == 'datalist'" >
+
+        <div class="{{itemControl.controlClass}}" >
+            
+          <label *ngIf="itemControl.propertyTextLabel != null">{{jsonLanguageTags[itemControl.propertyTextLabel]}}{{itemControl.required == true ? ' *':''}}</label> 
+          <input id="{{itemControl.fieldFormName}}" name={{itemControl.fieldFormName}} [attr.list]="itemControl.fieldFormListName"  [(ngModel)]="currentObject[itemControl.propertyName+'_currentvalue']" 
+          [style.width]="itemControl.fieldWidth"  (change)="fn_OnChangeInputDataList(itemControl,currentObject)" [readonly]="itemControl.readonly" 
+          [ngClass]="fn_FormFieldValidation(itemControl,currentObject)"
+          >
+           
+          <datalist id="{{itemControl.fieldFormListName}}" >
+              <option *ngFor="let itemDataList of fn_DataListFilter(itemControl , itemControl.collectionData ); let j = index" value="{{itemDataList[itemControl.propertyDataListItemName]}}" ></option>
+          </datalist>
+
+        </div>
+
+       </div>
+
+
+       <!-- Control GroupCheckBox -->
+       <div *ngIf="itemControl.controlType == 'groupradiobutton'" >
+         <div class="{{itemControl.controlClass}}" >
+            <label *ngIf="itemControl.propertyTextLabel != null" [ngClass]="fn_FormFieldValidation(itemControl,currentObject)" >{{jsonLanguageTags[itemControl.propertyTextLabel]}}{{itemControl.required == true ? ' *':''}}</label> 
+            
+            <div  *ngFor="let itemRadioBttn of itemControl.collectionData; let j = index" >              
+              
+              <input [attr.name]="itemControl.fieldFormName" id="{{itemRadioBttn[itemControl.propertyDataGroupButtonItemId]}}" 
+               type="radio"  
+               [style.width]="itemControl.fieldWidth"  [readonly]="itemControl.readonly" [attr.value]="itemRadioBttn[itemControl.propertyDataGroupButtonItemId]" 
+               
+               (change)="fn_OnChangeGroupRadioButton(itemControl,currentObject,itemRadioBttn)" 
+               [checked]="currentObject[itemControl.propertyName+'_tmprbg']['checked'+j]"
+              >
+              <label [attr.for]="itemRadioBttn[itemControl.propertyDataGroupButtonItemId]" >{{itemRadioBttn[itemControl.propertyDataGroupButtonItemName]}}</label> 
+            </div>
+            <div [hidden]="flagValueTrue" >                             
+              <input [attr.name]="itemControl.fieldFormName" type="radio" [attr.value]="-1" >              
+            </div>
+            <br>
+         </div>
+         
+       </div>  
+
+
+       <!-- Control Search Input -->
+       <div *ngIf="itemControl.controlType == 'searchinput'" >
+
+        <div class="{{itemControl.controlClass}}" >
+            
+          <label *ngIf="itemControl.propertyTextLabel != null">{{jsonLanguageTags[itemControl.propertyTextLabel]}}{{itemControl.required == true ? ' *':''}}</label> 
+          <input id="{{itemControl.fieldFormName}}" name={{itemControl.fieldFormName}}  [(ngModel)]="currentObject[itemControl.propertyName+'_currentvalue']" 
+          [style.width]="itemControl.fieldWidth"   [readonly]=true
+          [ngClass]="fn_FormFieldValidation(itemControl,currentObject)"
+          >
+
+          <button type="button" (click)="fn_OpenSearchInput(itemControl,currentObject)" >
+            <i class="la la-search"></i>
+            <span>...</span>
+          </button>
+                    
+        </div>
+
+       </div>
+
+
+       <!-- Control Date Range-->
+       <div *ngIf="itemControl.controlType == 'daterange'"  >
+         
+        <div class="{{itemControl.controlClass}}">
+         
+            <label *ngIf="itemControl.propertyTextLabel != null">{{jsonLanguageTags[itemControl.propertyTextLabel]}}{{itemControl.required == true ? ' *':''}}</label> 
+            <input name={{itemControl.fieldFormName}} type="date"  [(ngModel)]="currentObject[itemControl.propertyName]['startdate']" 
+            [style.width]="itemControl.fieldWidth" (change)="fn_OnChangeInputRangeDate(itemControl,currentObject,1)" [readonly]="itemControl.readonly" 
+            [ngClass]="fn_FormFieldValidation(itemControl,currentObject)"
+            >
+            <span>&nbsp;</span>
+            <input name={{itemControl.fieldFormName}} type="date"  [(ngModel)]="currentObject[itemControl.propertyName]['enddate']" 
+            [style.width]="itemControl.fieldWidth" (change)="fn_OnChangeInputRangeDate(itemControl,currentObject,2)" [readonly]="itemControl.readonly" 
+            [ngClass]="fn_FormFieldValidation(itemControl,currentObject)"
+            >
+         
+         </div>
+
+       </div>  
+       
+       
+       <!-- Control Image-->
+       <div *ngIf="itemControl.controlType == 'img'"  >
+
+         <div class="{{itemControl.controlClass}}">          
+           <img src="{{itemControl.controlSource}}"  [style.width]="itemControl.fieldWidth" [style.height]="itemControl.fieldHeight">        
+         </div>
+
+       </div>
+
+      <!-- Control Label-->
+      <div *ngIf="itemControl.controlType == 'text'"  >
+
+          <div  *ngIf="itemControl.controlSubType == 'label'"  class="{{itemControl.controlClass}}">          
+             <label [style.width]="itemControl.fieldWidth" >{{jsonLanguageTags[itemControl.propertyTextLabel]}}</label>    
+          </div>       
+          <div  *ngIf="itemControl.controlSubType == 'h1'"  class="{{itemControl.controlClass}}">          
+             <h1 [style.width]="itemControl.fieldWidth" >{{jsonLanguageTags[itemControl.propertyTextLabel]}}</h1>    
+          </div>          
+          <div  *ngIf="itemControl.controlSubType == 'h2'"  class="{{itemControl.controlClass}}">          
+            <h2 [style.width]="itemControl.fieldWidth" >{{jsonLanguageTags[itemControl.propertyTextLabel]}}</h2>    
+          </div>   
+          <div  *ngIf="itemControl.controlSubType == 'h3'"  class="{{itemControl.controlClass}}">          
+            <h3 [style.width]="itemControl.fieldWidth" >{{jsonLanguageTags[itemControl.propertyTextLabel]}}</h3>    
+          </div>    
+          <div  *ngIf="itemControl.controlSubType == 'h4'"  class="{{itemControl.controlClass}}">          
+            <h4 [style.width]="itemControl.fieldWidth" >{{jsonLanguageTags[itemControl.propertyTextLabel]}}</h4>    
+          </div> 
+          <div  *ngIf="itemControl.controlSubType == 'h5'"  class="{{itemControl.controlClass}}">          
+            <h5 [style.width]="itemControl.fieldWidth" >{{jsonLanguageTags[itemControl.propertyTextLabel]}}</h5>    
+          </div>                            
+
+      </div>
+
+      <!-- Control Blank-->
+      <div *ngIf="itemControl.controlType == 'blank'"  >
+         <div class="{{itemControl.controlClass}}"  [style.width]="itemControl.fieldWidth"  >          
+              <br>  
+         </div>     
+      </div>
+
+
+
+       <!-- Control Select Multiple -->
+       <div *ngIf="itemControl.controlType == 'selectmultiple'" >
+
+        <div class="{{itemControl.controlClass}}" >
+          <div>
+          <label *ngIf="itemControl.propertyTextLabel != null">{{jsonLanguageTags[itemControl.propertyTextLabel]}}{{itemControl.required == true ? ' *':''}}</label> 
+          <input id="{{itemControl.fieldFormName}}" name={{itemControl.fieldFormName}} [attr.list]="itemControl.fieldFormListName"  [(ngModel)]="currentObject[itemControl.propertyName+'_currentvalue']" 
+          [style.width]="itemControl.fieldWidth"  [readonly]=true 
+          [ngClass]="fn_FormFieldValidation(itemControl,currentObject)"
+          >
+           
+          <select id="{{itemControl.fieldFormListName}}" multiple [(ngModel)]="currentObject[itemControl.propertyName+'_currentvalue']"  (change)="fn_OnChangeInputDataSelect(itemControl,currentObject)" >
+              <option *ngFor="let itemDataList of fn_DataSelectFilter(itemControl , itemControl.collectionData ); let j = index" value="{{itemDataList[itemControl.propertyDataListItemName]}}" >
+                {{itemDataList[itemControl.propertyDataListItemName]}}
+              </option>
+          </select>
+          </div>
+        </div>
+
+       </div>
+
+
+
+      </div>
+
+    </div>
+
+  </div> 
+   
+    <!-- [(ngModel)]="currentObject[itemControl.propertyName]" -->
+
+</div>

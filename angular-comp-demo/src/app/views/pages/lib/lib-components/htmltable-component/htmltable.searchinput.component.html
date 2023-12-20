@@ -1,0 +1,41 @@
+<h1 mat-dialog-title>{{jsonLanguageTags[dialogSearchTitle]}}</h1>
+  <div mat-dialog-content>
+
+    <div class="csssearchbaseinput" >
+            
+      <label >{{jsonLanguageTags['txtsearch']}}</label> 
+      <input  type="text"  [(ngModel)]="inputTxtSearch" class="csssearchbaseinputtxt"  >
+      <button type="button" (click)="fn_searchButton()">
+        <div class="csssearchbaseinputtxt_button"></div>
+        <span>{{jsonLanguageTags['txtsearch']}}</span>
+      </button> 
+                 
+    </div>
+    <div class="csssearchbase_data_selected" >{{jsonLanguageTags.txtselected}} : {{dataSelected[dataSelectedField]}}</div>
+    <div>
+      <table  [ngClass]="tableClass"  [style.height]="tableHeightPage">
+        <tr>
+            <th *ngFor="let columnField of tableStructure; let i = index" >{{jsonLanguageTags[columnField.propertyTextLabel]}}</th>
+            <th class="csstablesearchtdbtn_select">{{jsonLanguageTags.txtselect}}</th>
+        </tr>
+        <tr *ngFor="let columnData of fn_tableDataPagination(); let j = index" >
+             <td *ngFor="let columnField of tableStructure; let i = index" >{{columnData[columnField.propertyValue]}}</td>
+             <td style="text-align:center;"><button (click)="fn_clickSelected(columnData)" ></button></td>
+        </tr>
+      </table>
+    </div>
+    <div class="csssearchbase_table_nav">
+      <button (click)="fn_tableDataPagSubstrct()" class="csstablesearchbase_button_left"   >   </button>
+     <!-- <span>Pag. {{(tableCurrentPage)+1}}</span>-->
+      <span>Pag. &nbsp;&nbsp;</span>
+      <button *ngFor="let itemI of tableDataPages; let i = index" [ngClass]="fn_tableGetCurPageClass(i)" (click)="fn_tableDataPagChange(i)" >{{itemI+1}}</button>
+      <button (click)="fn_tableDataPagAdd()" class="csstablesearchbase_button_right" >   </button>
+    </div>
+
+
+  </div>
+  <div mat-dialog-actions class="csssearchbase_response" >
+    <button mat-button (click)="onConfirm()"  >Aceptar</button>
+    <button mat-button (click)="onDismiss()"  >Cerrar</button>
+
+  </div>
